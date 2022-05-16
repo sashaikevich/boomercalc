@@ -2,6 +2,500 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./app/components/Footer.js":
+/*!**********************************!*\
+  !*** ./app/components/Footer.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function Footer() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "fotter");
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Footer);
+
+/***/ }),
+
+/***/ "./app/components/Form.js":
+/*!********************************!*\
+  !*** ./app/components/Form.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_currency_input_field__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-currency-input-field */ "./node_modules/react-currency-input-field/dist/index.esm.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../data */ "./app/data.js");
+/* harmony import */ var _Results__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Results */ "./app/components/Results.js");
+/* harmony import */ var _InputFields__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./InputFields */ "./app/components/InputFields.js");
+
+
+
+
+
+
+function Form() {
+  const [boomerWage, setBoomerWage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(3.05);
+  const [boomerYear, setBoomerYear] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(1985);
+  const [zYear, setZYear] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(2022);
+  const [zWage, setZWage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(9.20);
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [showExtraFields, setShowExtraFields] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [showResults, setShowResults] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [calculations, setCalculations] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}); // useEffect(() => {
+  //   setErrors([])
+  //   console.log(errors)
+  // }, [boomerWage, boomerYear, zWage, zYear])
+
+  function limitYearsRange(year) {
+    const maxYear = 2022;
+    const minYear = 1946;
+    if (year > maxYear) return maxYear;
+    if (year < minYear) return minYear;
+    return year;
+  }
+
+  function handleCalculation() {
+    // if (boomerWage == undefined) {
+    //   setErrors(prev => prev.concat('Please provide an hourly wage'))
+    //   return
+    // }
+    // if (zWage == undefined) {
+    //   setErrors(prev => prev.concat('Please provide an hourly wage'))
+    //   return
+    // }
+    setBoomerYear(prev => limitYearsRange(prev));
+    setZYear(prev => limitYearsRange(prev));
+    setBoomerWage(prev => prev == 0 ? 1 : Math.abs(prev));
+    setZWage(prev => prev == 0 ? 1 : Math.abs(prev));
+    const boomerCPI = _data__WEBPACK_IMPORTED_MODULE_2__["default"].years.filter(year => year.year == boomerYear)[0].cpi;
+    const zCPI = _data__WEBPACK_IMPORTED_MODULE_2__["default"].years.filter(year => year.year == zYear)[0].cpi;
+    setCalculations({
+      boomerCPI,
+      zCPI,
+      boomerWage,
+      zWage
+    });
+    setShowResults(true);
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    onClick: () => {
+      setShowExtraFields(prev => !prev);
+    }
+  }, "show fields"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", {
+    className: "user-inputs-wrapper"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "boomer-inputs"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.BoomerWageInput, {
+    boomerWage: boomerWage,
+    setBoomerWage: setBoomerWage
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.BoomerYearInput, {
+    boomerYear: boomerYear,
+    setBoomerYear: setBoomerYear
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "z-inputs"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.ZWageInput, {
+    zWage: zWage,
+    setZWage: setZWage
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.ZYearInput, {
+    zYear: zYear,
+    setZYear: setZYear,
+    showExtraFields: showExtraFields
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    onClick: () => handleCalculation()
+  }, "Calculate"), showResults ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Results__WEBPACK_IMPORTED_MODULE_3__["default"], calculations) : "");
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Form); // onValueChange={(value, name) => console.log(value, name)}
+
+/***/ }),
+
+/***/ "./app/components/InputFields.js":
+/*!***************************************!*\
+  !*** ./app/components/InputFields.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "BoomerWageInput": () => (/* binding */ BoomerWageInput),
+/* harmony export */   "BoomerYearInput": () => (/* binding */ BoomerYearInput),
+/* harmony export */   "ZWageInput": () => (/* binding */ ZWageInput),
+/* harmony export */   "ZYearInput": () => (/* binding */ ZYearInput)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_currency_input_field__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-currency-input-field */ "./node_modules/react-currency-input-field/dist/index.esm.js");
+
+
+function BoomerWageInput(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "boomerWage"
+  }, "boomer wage"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_currency_input_field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    id: "boomerWage",
+    name: "boomerWage",
+    prefix: "$",
+    allowNegativeValue: "false",
+    value: props.boomerWage,
+    decimalsLimit: 2,
+    onValueChange: (value, name) => props.setBoomerWage(value)
+  }));
+}
+function BoomerYearInput(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "boomerYear"
+  }, "boomer year"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    value: props.boomerYear,
+    name: "boomerYear",
+    min: "1946",
+    max: "2022",
+    onChange: e => props.setBoomerYear(e.target.value),
+    type: "number"
+  }));
+}
+function ZWageInput(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "zWage"
+  }, "z wage"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_currency_input_field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    id: "zWage",
+    name: "zWage",
+    prefix: "$",
+    allowNegativeValue: "false",
+    value: props.zWage,
+    decimalsLimit: 2,
+    onValueChange: (value, name) => props.setZWage(value)
+  }));
+}
+function ZYearInput(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: `extra-field ${props.showExtraFields ? "extra-field--visible" : ""}`
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "zYear"
+  }, "z year"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    value: props.zYear,
+    name: "zYear",
+    min: "1946",
+    max: "2022",
+    onChange: e => props.setZYear(e.target.value),
+    type: "number"
+  }));
+}
+
+/***/ }),
+
+/***/ "./app/components/Menu.js":
+/*!********************************!*\
+  !*** ./app/components/Menu.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function Menu() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "BoomerCalc");
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Menu);
+
+/***/ }),
+
+/***/ "./app/components/Results.js":
+/*!***********************************!*\
+  !*** ./app/components/Results.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function Results({
+  boomerCPI,
+  zCPI,
+  boomerWage,
+  zWage
+}) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", {
+    className: "results-wrapper"
+  }, "results ", boomerCPI / zCPI * boomerWage);
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Results);
+
+/***/ }),
+
+/***/ "./app/data.js":
+/*!*********************!*\
+  !*** ./app/data.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  "last-updated": "May 2022",
+  "source": "https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/",
+  "years": [{
+    year: "1946",
+    cpi: 19.5
+  }, {
+    year: "1947",
+    cpi: 22.3
+  }, {
+    year: "1948",
+    cpi: 24.1
+  }, {
+    year: "1949",
+    cpi: 23.8
+  }, {
+    year: "1950",
+    cpi: 24.1
+  }, {
+    year: "1951",
+    cpi: 26.0
+  }, {
+    year: "1952",
+    cpi: 26.5
+  }, {
+    year: "1953",
+    cpi: 26.7
+  }, {
+    year: "1954",
+    cpi: 26.9
+  }, {
+    year: "1955",
+    cpi: 26.8
+  }, {
+    year: "1956",
+    cpi: 27.2
+  }, {
+    year: "1957",
+    cpi: 28.1
+  }, {
+    year: "1958",
+    cpi: 28.9
+  }, {
+    year: "1959",
+    cpi: 29.1
+  }, {
+    year: "1960",
+    cpi: 29.6
+  }, {
+    year: "1961",
+    cpi: 29.9
+  }, {
+    year: "1962",
+    cpi: 30.2
+  }, {
+    year: "1963",
+    cpi: 30.6
+  }, {
+    year: "1964",
+    cpi: 31.0
+  }, {
+    year: "1965",
+    cpi: 31.5
+  }, {
+    year: "1966",
+    cpi: 32.4
+  }, {
+    year: "1967",
+    cpi: 33.4
+  }, {
+    year: "1968",
+    cpi: 34.8
+  }, {
+    year: "1969",
+    cpi: 36.7
+  }, {
+    year: "1970",
+    cpi: 38.8
+  }, {
+    year: "1971",
+    cpi: 40.5
+  }, {
+    year: "1972",
+    cpi: 41.8
+  }, {
+    year: "1973",
+    cpi: 44.4
+  }, {
+    year: "1974",
+    cpi: 49.3
+  }, {
+    year: "1975",
+    cpi: 53.8
+  }, {
+    year: "1976",
+    cpi: 56.9
+  }, {
+    year: "1977",
+    cpi: 60.6
+  }, {
+    year: "1978",
+    cpi: 65.2
+  }, {
+    year: "1979",
+    cpi: 72.6
+  }, {
+    year: "1980",
+    cpi: 82.4
+  }, {
+    year: "1981",
+    cpi: 90.9
+  }, {
+    year: "1982",
+    cpi: 96.5
+  }, {
+    year: "1983",
+    cpi: 99.6
+  }, {
+    year: "1984",
+    cpi: 103.9
+  }, {
+    year: "1985",
+    cpi: 107.6
+  }, {
+    year: "1986",
+    cpi: 109.6
+  }, {
+    year: "1987",
+    cpi: 113.6
+  }, {
+    year: "1988",
+    cpi: 118.3
+  }, {
+    year: "1989",
+    cpi: 124.0
+  }, {
+    year: "1990",
+    cpi: 130.7
+  }, {
+    year: "1991",
+    cpi: 136.2
+  }, {
+    year: "1992",
+    cpi: 140.3
+  }, {
+    year: "1993",
+    cpi: 144.5
+  }, {
+    year: "1994",
+    cpi: 148.2
+  }, {
+    year: "1995",
+    cpi: 152.4
+  }, {
+    year: "1996",
+    cpi: 156.9
+  }, {
+    year: "1997",
+    cpi: 160.5
+  }, {
+    year: "1998",
+    cpi: 163.0
+  }, {
+    year: "1999",
+    cpi: 166.6
+  }, {
+    year: "2000",
+    cpi: 172.2
+  }, {
+    year: "2001",
+    cpi: 177.1
+  }, {
+    year: "2002",
+    cpi: 179.9
+  }, {
+    year: "2003",
+    cpi: 184.0
+  }, {
+    year: "2004",
+    cpi: 188.9
+  }, {
+    year: "2005",
+    cpi: 195.3
+  }, {
+    year: "2006",
+    cpi: 201.6
+  }, {
+    year: "2007",
+    cpi: 207.3
+  }, {
+    year: "2008",
+    cpi: 215.303
+  }, {
+    year: "2009",
+    cpi: 214.537
+  }, {
+    year: "2010",
+    cpi: 218.056
+  }, {
+    year: "2011",
+    cpi: 224.939
+  }, {
+    year: "2012",
+    cpi: 229.594
+  }, {
+    year: "2013",
+    cpi: 232.957
+  }, {
+    year: "2014",
+    cpi: 236.736
+  }, {
+    year: "2015",
+    cpi: 237.017
+  }, {
+    year: "2016",
+    cpi: 240.007
+  }, {
+    year: "2017",
+    cpi: 245.120
+  }, {
+    year: "2018",
+    cpi: 251.107
+  }, {
+    year: "2019",
+    cpi: 255.657
+  }, {
+    year: "2020",
+    cpi: 258.811
+  }, {
+    year: "2021",
+    cpi: 270.970
+  }, {
+    year: "2022",
+    cpi: 285.369
+  }]
+});
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./app/style.scss":
 /*!*****************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./app/style.scss ***!
@@ -21,7 +515,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\n  background: antiquewhite;\n}", "",{"version":3,"sources":["webpack://./app/style.scss"],"names":[],"mappings":"AAAA;EACE,wBAAA;AACF","sourcesContent":["body {\n  background: antiquewhite;\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\n  background: #f1f1f1;\n}\nbody .user-inputs-wrapper {\n  max-width: 50%;\n  margin: 0 auto;\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n}\nbody .user-inputs-wrapper .extra-field {\n  display: none;\n}\nbody .user-inputs-wrapper .extra-field--visible {\n  display: block;\n}", "",{"version":3,"sources":["webpack://./app/style.scss"],"names":[],"mappings":"AAAA;EACE,mBAAA;AACF;AACE;EACE,cAAA;EACA,cAAA;EACA,aAAA;EACA,qCAAA;AACJ;AACI;EACE,aAAA;AACN;AAKM;EACE,cAAA;AAHR","sourcesContent":["body {\n  background: #f1f1f1;\n\n  .user-inputs-wrapper {\n    max-width: 50%;\n    margin: 0 auto;\n    display: grid;\n    grid-template-columns: repeat(2, 1fr);\n\n    .extra-field {\n      display: none;\n      // opacity: 0;\n      // visibility: hidden;\n      // transform: translateX(50%);\n      // transition: transform 300ms ease-out;\n\n      &--visible {\n        display: block;\n        // opacity: 1;\n        // visibility: visible;\n        // transform: translateX(0%);\n      }\n    }\n  }\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -167,6 +661,595 @@ module.exports = function (item) {
 
   return [content].join("\n");
 };
+
+/***/ }),
+
+/***/ "./node_modules/react-currency-input-field/dist/index.esm.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-currency-input-field/dist/index.esm.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "formatValue": () => (/* binding */ formatValue)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || from);
+}
+
+/**
+ * Escape regex char
+ *
+ * See: https://stackoverflow.com/questions/17885855/use-dynamic-variable-string-as-regex-pattern-in-javascript
+ */
+var escapeRegExp = function (stringToGoIntoTheRegex) {
+    return stringToGoIntoTheRegex.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
+var abbrMap = { k: 1000, m: 1000000, b: 1000000000 };
+/**
+ * Parse a value with abbreviation e.g 1k = 1000
+ */
+var parseAbbrValue = function (value, decimalSeparator) {
+    if (decimalSeparator === void 0) { decimalSeparator = '.'; }
+    var reg = new RegExp("(\\d+(" + escapeRegExp(decimalSeparator) + "\\d*)?)([kmb])$", 'i');
+    var match = value.match(reg);
+    if (match) {
+        var digits = match[1], abbr = match[3];
+        var multiplier = abbrMap[abbr.toLowerCase()];
+        return Number(digits.replace(decimalSeparator, '.')) * multiplier;
+    }
+    return undefined;
+};
+
+/**
+ * Remove group separator from value eg. 1,000 > 1000
+ */
+var removeSeparators = function (value, separator) {
+    if (separator === void 0) { separator = ','; }
+    var reg = new RegExp(escapeRegExp(separator), 'g');
+    return value.replace(reg, '');
+};
+
+/**
+ * Remove invalid characters
+ */
+var removeInvalidChars = function (value, validChars) {
+    var chars = escapeRegExp(validChars.join(''));
+    var reg = new RegExp("[^\\d" + chars + "]", 'gi');
+    return value.replace(reg, '');
+};
+
+/**
+ * Remove prefix, separators and extra decimals from value
+ */
+var cleanValue = function (_a) {
+    var value = _a.value, _b = _a.groupSeparator, groupSeparator = _b === void 0 ? ',' : _b, _c = _a.decimalSeparator, decimalSeparator = _c === void 0 ? '.' : _c, _d = _a.allowDecimals, allowDecimals = _d === void 0 ? true : _d, _e = _a.decimalsLimit, decimalsLimit = _e === void 0 ? 2 : _e, _f = _a.allowNegativeValue, allowNegativeValue = _f === void 0 ? true : _f, _g = _a.disableAbbreviations, disableAbbreviations = _g === void 0 ? false : _g, _h = _a.prefix, prefix = _h === void 0 ? '' : _h, _j = _a.transformRawValue, transformRawValue = _j === void 0 ? function (rawValue) { return rawValue; } : _j;
+    var transformedValue = transformRawValue(value);
+    if (transformedValue === '-') {
+        return transformedValue;
+    }
+    var abbreviations = disableAbbreviations ? [] : ['k', 'm', 'b'];
+    var reg = new RegExp("((^|\\D)-\\d)|(-" + escapeRegExp(prefix) + ")");
+    var isNegative = reg.test(transformedValue);
+    // Is there a digit before the prefix? eg. 1$
+    var _k = RegExp("(\\d+)-?" + escapeRegExp(prefix)).exec(value) || [], prefixWithValue = _k[0], preValue = _k[1];
+    var withoutPrefix = prefix
+        ? prefixWithValue
+            ? transformedValue.replace(prefixWithValue, '').concat(preValue)
+            : transformedValue.replace(prefix, '')
+        : transformedValue;
+    var withoutSeparators = removeSeparators(withoutPrefix, groupSeparator);
+    var withoutInvalidChars = removeInvalidChars(withoutSeparators, __spreadArray([
+        groupSeparator,
+        decimalSeparator
+    ], abbreviations));
+    var valueOnly = withoutInvalidChars;
+    if (!disableAbbreviations) {
+        // disallow letter without number
+        if (abbreviations.some(function (letter) { return letter === withoutInvalidChars.toLowerCase(); })) {
+            return '';
+        }
+        var parsed = parseAbbrValue(withoutInvalidChars, decimalSeparator);
+        if (parsed) {
+            valueOnly = String(parsed);
+        }
+    }
+    var includeNegative = isNegative && allowNegativeValue ? '-' : '';
+    if (decimalSeparator && valueOnly.includes(decimalSeparator)) {
+        var _l = withoutInvalidChars.split(decimalSeparator), int = _l[0], decimals = _l[1];
+        var trimmedDecimals = decimalsLimit && decimals ? decimals.slice(0, decimalsLimit) : decimals;
+        var includeDecimals = allowDecimals ? "" + decimalSeparator + trimmedDecimals : '';
+        return "" + includeNegative + int + includeDecimals;
+    }
+    return "" + includeNegative + valueOnly;
+};
+
+var fixedDecimalValue = function (value, decimalSeparator, fixedDecimalLength) {
+    if (fixedDecimalLength && value.length > 1) {
+        if (value.includes(decimalSeparator)) {
+            var _a = value.split(decimalSeparator), int = _a[0], decimals = _a[1];
+            if (decimals.length > fixedDecimalLength) {
+                return "" + int + decimalSeparator + decimals.slice(0, fixedDecimalLength);
+            }
+        }
+        var reg = value.length > fixedDecimalLength
+            ? new RegExp("(\\d+)(\\d{" + fixedDecimalLength + "})")
+            : new RegExp("(\\d)(\\d+)");
+        var match = value.match(reg);
+        if (match) {
+            var int = match[1], decimals = match[2];
+            return "" + int + decimalSeparator + decimals;
+        }
+    }
+    return value;
+};
+
+var getSuffix = function (value, _a) {
+    var _b = _a.groupSeparator, groupSeparator = _b === void 0 ? ',' : _b, _c = _a.decimalSeparator, decimalSeparator = _c === void 0 ? '.' : _c;
+    var suffixReg = new RegExp("\\d([^" + escapeRegExp(groupSeparator) + escapeRegExp(decimalSeparator) + "0-9]+)");
+    var suffixMatch = value.match(suffixReg);
+    return suffixMatch ? suffixMatch[1] : undefined;
+};
+
+/**
+ * Format value with decimal separator, group separator and prefix
+ */
+var formatValue = function (options) {
+    var _value = options.value, decimalSeparator = options.decimalSeparator, intlConfig = options.intlConfig, decimalScale = options.decimalScale, _a = options.prefix, prefix = _a === void 0 ? '' : _a, _b = options.suffix, suffix = _b === void 0 ? '' : _b;
+    if (_value === '' || _value === undefined) {
+        return '';
+    }
+    if (_value === '-') {
+        return '-';
+    }
+    var isNegative = new RegExp("^\\d?-" + (prefix ? escapeRegExp(prefix) + "?" : '') + "\\d").test(_value);
+    var value = decimalSeparator !== '.'
+        ? replaceDecimalSeparator(_value, decimalSeparator, isNegative)
+        : _value;
+    var numberFormatter = intlConfig
+        ? new Intl.NumberFormat(intlConfig.locale, intlConfig.currency
+            ? {
+                style: 'currency',
+                currency: intlConfig.currency,
+                minimumFractionDigits: decimalScale || 0,
+                maximumFractionDigits: 20,
+            }
+            : undefined)
+        : new Intl.NumberFormat(undefined, {
+            minimumFractionDigits: decimalScale || 0,
+            maximumFractionDigits: 20,
+        });
+    var parts = numberFormatter.formatToParts(Number(value));
+    var formatted = replaceParts(parts, options);
+    // Does intl formatting add a suffix?
+    var intlSuffix = getSuffix(formatted, __assign({}, options));
+    // Include decimal separator if user input ends with decimal separator
+    var includeDecimalSeparator = _value.slice(-1) === decimalSeparator ? decimalSeparator : '';
+    var _c = value.match(RegExp('\\d+\\.(\\d+)')) || [], decimals = _c[1];
+    // Keep original decimal padding if no decimalScale
+    if (decimalScale === undefined && decimals && decimalSeparator) {
+        if (formatted.includes(decimalSeparator)) {
+            formatted = formatted.replace(RegExp("(\\d+)(" + escapeRegExp(decimalSeparator) + ")(\\d+)", 'g'), "$1$2" + decimals);
+        }
+        else {
+            if (intlSuffix && !suffix) {
+                formatted = formatted.replace(intlSuffix, "" + decimalSeparator + decimals + intlSuffix);
+            }
+            else {
+                formatted = "" + formatted + decimalSeparator + decimals;
+            }
+        }
+    }
+    if (suffix && includeDecimalSeparator) {
+        return "" + formatted + includeDecimalSeparator + suffix;
+    }
+    if (intlSuffix && includeDecimalSeparator) {
+        return formatted.replace(intlSuffix, "" + includeDecimalSeparator + intlSuffix);
+    }
+    if (intlSuffix && suffix) {
+        return formatted.replace(intlSuffix, "" + includeDecimalSeparator + suffix);
+    }
+    return [formatted, includeDecimalSeparator, suffix].join('');
+};
+/**
+ * Before converting to Number, decimal separator has to be .
+ */
+var replaceDecimalSeparator = function (value, decimalSeparator, isNegative) {
+    var newValue = value;
+    if (decimalSeparator && decimalSeparator !== '.') {
+        newValue = newValue.replace(RegExp(escapeRegExp(decimalSeparator), 'g'), '.');
+        if (isNegative && decimalSeparator === '-') {
+            newValue = "-" + newValue.slice(1);
+        }
+    }
+    return newValue;
+};
+var replaceParts = function (parts, _a) {
+    var prefix = _a.prefix, groupSeparator = _a.groupSeparator, decimalSeparator = _a.decimalSeparator, decimalScale = _a.decimalScale, _b = _a.disableGroupSeparators, disableGroupSeparators = _b === void 0 ? false : _b;
+    return parts
+        .reduce(function (prev, _a, i) {
+        var type = _a.type, value = _a.value;
+        if (i === 0 && prefix) {
+            if (type === 'minusSign') {
+                return [value, prefix];
+            }
+            if (type === 'currency') {
+                return __spreadArray(__spreadArray([], prev), [prefix]);
+            }
+            return [prefix, value];
+        }
+        if (type === 'currency') {
+            return prefix ? prev : __spreadArray(__spreadArray([], prev), [value]);
+        }
+        if (type === 'group') {
+            return !disableGroupSeparators
+                ? __spreadArray(__spreadArray([], prev), [groupSeparator !== undefined ? groupSeparator : value]) : prev;
+        }
+        if (type === 'decimal') {
+            if (decimalScale !== undefined && decimalScale === 0) {
+                return prev;
+            }
+            return __spreadArray(__spreadArray([], prev), [decimalSeparator !== undefined ? decimalSeparator : value]);
+        }
+        if (type === 'fraction') {
+            return __spreadArray(__spreadArray([], prev), [decimalScale !== undefined ? value.slice(0, decimalScale) : value]);
+        }
+        return __spreadArray(__spreadArray([], prev), [value]);
+    }, [''])
+        .join('');
+};
+
+var defaultConfig = {
+    currencySymbol: '',
+    groupSeparator: '',
+    decimalSeparator: '',
+    prefix: '',
+    suffix: '',
+};
+/**
+ * Get locale config from input or default
+ */
+var getLocaleConfig = function (intlConfig) {
+    var _a = intlConfig || {}, locale = _a.locale, currency = _a.currency;
+    var numberFormatter = locale
+        ? new Intl.NumberFormat(locale, currency ? { currency: currency, style: 'currency' } : undefined)
+        : new Intl.NumberFormat();
+    return numberFormatter.formatToParts(1000.1).reduce(function (prev, curr, i) {
+        if (curr.type === 'currency') {
+            if (i === 0) {
+                return __assign(__assign({}, prev), { currencySymbol: curr.value, prefix: curr.value });
+            }
+            else {
+                return __assign(__assign({}, prev), { currencySymbol: curr.value, suffix: curr.value });
+            }
+        }
+        if (curr.type === 'group') {
+            return __assign(__assign({}, prev), { groupSeparator: curr.value });
+        }
+        if (curr.type === 'decimal') {
+            return __assign(__assign({}, prev), { decimalSeparator: curr.value });
+        }
+        return prev;
+    }, defaultConfig);
+};
+
+var isNumber = function (input) { return RegExp(/\d/, 'gi').test(input); };
+
+var padTrimValue = function (value, decimalSeparator, decimalScale) {
+    if (decimalSeparator === void 0) { decimalSeparator = '.'; }
+    if (decimalScale === undefined || value === '' || value === undefined) {
+        return value;
+    }
+    if (!value.match(/\d/g)) {
+        return '';
+    }
+    var _a = value.split(decimalSeparator), int = _a[0], decimals = _a[1];
+    if (decimalScale === 0) {
+        return int;
+    }
+    var newValue = decimals || '';
+    if (newValue.length < decimalScale) {
+        while (newValue.length < decimalScale) {
+            newValue += '0';
+        }
+    }
+    else {
+        newValue = newValue.slice(0, decimalScale);
+    }
+    return "" + int + decimalSeparator + newValue;
+};
+
+/**
+ * Based on the last key stroke and the cursor position, update the value
+ * and reposition the cursor to the right place
+ */
+var repositionCursor = function (_a) {
+    var selectionStart = _a.selectionStart, value = _a.value, lastKeyStroke = _a.lastKeyStroke, stateValue = _a.stateValue, groupSeparator = _a.groupSeparator;
+    var cursorPosition = selectionStart;
+    var modifiedValue = value;
+    if (stateValue && cursorPosition) {
+        var splitValue = value.split('');
+        // if cursor is to right of groupSeparator and backspace pressed, delete the character to the left of the separator and reposition the cursor
+        if (lastKeyStroke === 'Backspace' && stateValue[cursorPosition] === groupSeparator) {
+            splitValue.splice(cursorPosition - 1, 1);
+            cursorPosition -= 1;
+        }
+        // if cursor is to left of groupSeparator and delete pressed, delete the character to the right of the separator and reposition the cursor
+        if (lastKeyStroke === 'Delete' && stateValue[cursorPosition] === groupSeparator) {
+            splitValue.splice(cursorPosition, 1);
+            cursorPosition += 1;
+        }
+        modifiedValue = splitValue.join('');
+        return { modifiedValue: modifiedValue, cursorPosition: cursorPosition };
+    }
+    return { modifiedValue: modifiedValue, cursorPosition: selectionStart };
+};
+
+var CurrencyInput = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (_a, ref) {
+    var _b = _a.allowDecimals, allowDecimals = _b === void 0 ? true : _b, _c = _a.allowNegativeValue, allowNegativeValue = _c === void 0 ? true : _c, id = _a.id, name = _a.name, className = _a.className, customInput = _a.customInput, decimalsLimit = _a.decimalsLimit, defaultValue = _a.defaultValue, _d = _a.disabled, disabled = _d === void 0 ? false : _d, userMaxLength = _a.maxLength, userValue = _a.value, onValueChange = _a.onValueChange, fixedDecimalLength = _a.fixedDecimalLength, placeholder = _a.placeholder, decimalScale = _a.decimalScale, prefix = _a.prefix, suffix = _a.suffix, intlConfig = _a.intlConfig, step = _a.step, min = _a.min, max = _a.max, _e = _a.disableGroupSeparators, disableGroupSeparators = _e === void 0 ? false : _e, _f = _a.disableAbbreviations, disableAbbreviations = _f === void 0 ? false : _f, _decimalSeparator = _a.decimalSeparator, _groupSeparator = _a.groupSeparator, onChange = _a.onChange, onFocus = _a.onFocus, onBlur = _a.onBlur, onKeyDown = _a.onKeyDown, onKeyUp = _a.onKeyUp, transformRawValue = _a.transformRawValue, props = __rest(_a, ["allowDecimals", "allowNegativeValue", "id", "name", "className", "customInput", "decimalsLimit", "defaultValue", "disabled", "maxLength", "value", "onValueChange", "fixedDecimalLength", "placeholder", "decimalScale", "prefix", "suffix", "intlConfig", "step", "min", "max", "disableGroupSeparators", "disableAbbreviations", "decimalSeparator", "groupSeparator", "onChange", "onFocus", "onBlur", "onKeyDown", "onKeyUp", "transformRawValue"]);
+    if (_decimalSeparator && isNumber(_decimalSeparator)) {
+        throw new Error('decimalSeparator cannot be a number');
+    }
+    if (_groupSeparator && isNumber(_groupSeparator)) {
+        throw new Error('groupSeparator cannot be a number');
+    }
+    var localeConfig = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return getLocaleConfig(intlConfig); }, [intlConfig]);
+    var decimalSeparator = _decimalSeparator || localeConfig.decimalSeparator || '';
+    var groupSeparator = _groupSeparator || localeConfig.groupSeparator || '';
+    if (decimalSeparator &&
+        groupSeparator &&
+        decimalSeparator === groupSeparator &&
+        disableGroupSeparators === false) {
+        throw new Error('decimalSeparator cannot be the same as groupSeparator');
+    }
+    var formatValueOptions = {
+        decimalSeparator: decimalSeparator,
+        groupSeparator: groupSeparator,
+        disableGroupSeparators: disableGroupSeparators,
+        intlConfig: intlConfig,
+        prefix: prefix || localeConfig.prefix,
+        suffix: suffix,
+    };
+    var cleanValueOptions = {
+        decimalSeparator: decimalSeparator,
+        groupSeparator: groupSeparator,
+        allowDecimals: allowDecimals,
+        decimalsLimit: decimalsLimit || fixedDecimalLength || 2,
+        allowNegativeValue: allowNegativeValue,
+        disableAbbreviations: disableAbbreviations,
+        prefix: prefix || localeConfig.prefix,
+        transformRawValue: transformRawValue,
+    };
+    var formattedStateValue = defaultValue !== undefined && defaultValue !== null
+        ? formatValue(__assign(__assign({}, formatValueOptions), { decimalScale: decimalScale, value: String(defaultValue) }))
+        : userValue !== undefined && userValue !== null
+            ? formatValue(__assign(__assign({}, formatValueOptions), { decimalScale: decimalScale, value: String(userValue) }))
+            : '';
+    var _g = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(formattedStateValue), stateValue = _g[0], setStateValue = _g[1];
+    var _h = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false), dirty = _h[0], setDirty = _h[1];
+    var _j = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0), cursor = _j[0], setCursor = _j[1];
+    var _k = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0), changeCount = _k[0], setChangeCount = _k[1];
+    var _l = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null), lastKeyStroke = _l[0], setLastKeyStroke = _l[1];
+    var inputRef = ref || (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+    /**
+     * Process change in value
+     */
+    var processChange = function (value, selectionStart) {
+        setDirty(true);
+        var _a = repositionCursor({
+            selectionStart: selectionStart,
+            value: value,
+            lastKeyStroke: lastKeyStroke,
+            stateValue: stateValue,
+            groupSeparator: groupSeparator,
+        }), modifiedValue = _a.modifiedValue, cursorPosition = _a.cursorPosition;
+        var stringValue = cleanValue(__assign({ value: modifiedValue }, cleanValueOptions));
+        if (userMaxLength && stringValue.replace(/-/g, '').length > userMaxLength) {
+            return;
+        }
+        if (stringValue === '' || stringValue === '-' || stringValue === decimalSeparator) {
+            onValueChange && onValueChange(undefined, name, { float: null, formatted: '', value: '' });
+            setStateValue(stringValue);
+            return;
+        }
+        var numberValue = parseFloat(stringValue.replace(decimalSeparator, '.'));
+        var formattedValue = formatValue(__assign({ value: stringValue }, formatValueOptions));
+        if (cursorPosition !== undefined && cursorPosition !== null) {
+            // Prevent cursor jumping
+            var newCursor = cursorPosition + (formattedValue.length - value.length);
+            newCursor = newCursor <= 0 ? (prefix ? prefix.length : 0) : newCursor;
+            setCursor(newCursor);
+            setChangeCount(changeCount + 1);
+        }
+        setStateValue(formattedValue);
+        if (onValueChange) {
+            var values = {
+                float: numberValue,
+                formatted: formattedValue,
+                value: stringValue,
+            };
+            onValueChange(stringValue, name, values);
+        }
+    };
+    /**
+     * Handle change event
+     */
+    var handleOnChange = function (event) {
+        var _a = event.target, value = _a.value, selectionStart = _a.selectionStart;
+        processChange(value, selectionStart);
+        onChange && onChange(event);
+    };
+    /**
+     * Handle focus event
+     */
+    var handleOnFocus = function (event) {
+        onFocus && onFocus(event);
+        return stateValue ? stateValue.length : 0;
+    };
+    /**
+     * Handle blur event
+     *
+     * Format value by padding/trimming decimals if required by
+     */
+    var handleOnBlur = function (event) {
+        var value = event.target.value;
+        var valueOnly = cleanValue(__assign({ value: value }, cleanValueOptions));
+        if (valueOnly === '-' || !valueOnly) {
+            setStateValue('');
+            onBlur && onBlur(event);
+            return;
+        }
+        var fixedDecimals = fixedDecimalValue(valueOnly, decimalSeparator, fixedDecimalLength);
+        var newValue = padTrimValue(fixedDecimals, decimalSeparator, decimalScale !== undefined ? decimalScale : fixedDecimalLength);
+        var numberValue = parseFloat(newValue.replace(decimalSeparator, '.'));
+        var formattedValue = formatValue(__assign(__assign({}, formatValueOptions), { value: newValue }));
+        if (onValueChange) {
+            onValueChange(newValue, name, {
+                float: numberValue,
+                formatted: formattedValue,
+                value: newValue,
+            });
+        }
+        setStateValue(formattedValue);
+        onBlur && onBlur(event);
+    };
+    /**
+     * Handle key down event
+     *
+     * Increase or decrease value by step
+     */
+    var handleOnKeyDown = function (event) {
+        var key = event.key;
+        setLastKeyStroke(key);
+        if (step && (key === 'ArrowUp' || key === 'ArrowDown')) {
+            event.preventDefault();
+            setCursor(stateValue.length);
+            var currentValue = parseFloat(userValue !== undefined && userValue !== null
+                ? String(userValue).replace(decimalSeparator, '.')
+                : cleanValue(__assign({ value: stateValue }, cleanValueOptions))) || 0;
+            var newValue = key === 'ArrowUp' ? currentValue + step : currentValue - step;
+            if (min !== undefined && newValue < min) {
+                return;
+            }
+            if (max !== undefined && newValue > max) {
+                return;
+            }
+            var fixedLength = String(step).includes('.')
+                ? Number(String(step).split('.')[1].length)
+                : undefined;
+            processChange(String(fixedLength ? newValue.toFixed(fixedLength) : newValue).replace('.', decimalSeparator));
+        }
+        onKeyDown && onKeyDown(event);
+    };
+    /**
+     * Handle key up event
+     *
+     * Move cursor if there is a suffix to prevent user typing past suffix
+     */
+    var handleOnKeyUp = function (event) {
+        var key = event.key, selectionStart = event.currentTarget.selectionStart;
+        if (key !== 'ArrowUp' && key !== 'ArrowDown' && stateValue !== '-') {
+            var suffix_1 = getSuffix(stateValue, { groupSeparator: groupSeparator, decimalSeparator: decimalSeparator });
+            if (suffix_1 && selectionStart && selectionStart > stateValue.length - suffix_1.length) {
+                /* istanbul ignore else */
+                if (inputRef && typeof inputRef === 'object' && inputRef.current) {
+                    var newCursor = stateValue.length - suffix_1.length;
+                    inputRef.current.setSelectionRange(newCursor, newCursor);
+                }
+            }
+        }
+        onKeyUp && onKeyUp(event);
+    };
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+        // prevent cursor jumping if editing value
+        if (dirty &&
+            stateValue !== '-' &&
+            inputRef &&
+            typeof inputRef === 'object' &&
+            inputRef.current) {
+            inputRef.current.setSelectionRange(cursor, cursor);
+        }
+    }, [stateValue, cursor, inputRef, dirty, changeCount]);
+    /**
+     * If user has only entered "-" or decimal separator,
+     * keep the char to allow them to enter next value
+     */
+    var getRenderValue = function () {
+        if (userValue !== undefined &&
+            userValue !== null &&
+            stateValue !== '-' &&
+            (!decimalSeparator || stateValue !== decimalSeparator)) {
+            return formatValue(__assign(__assign({}, formatValueOptions), { decimalScale: dirty ? undefined : decimalScale, value: String(userValue) }));
+        }
+        return stateValue;
+    };
+    var inputProps = __assign({ type: 'text', inputMode: 'decimal', id: id,
+        name: name,
+        className: className, onChange: handleOnChange, onBlur: handleOnBlur, onFocus: handleOnFocus, onKeyDown: handleOnKeyDown, onKeyUp: handleOnKeyUp, placeholder: placeholder,
+        disabled: disabled, value: getRenderValue(), ref: inputRef }, props);
+    if (customInput) {
+        var CustomInput = customInput;
+        return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(CustomInput, __assign({}, inputProps));
+    }
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", __assign({}, inputProps));
+});
+CurrencyInput.displayName = 'CurrencyInput';
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrencyInput);
+
+//# sourceMappingURL=index.esm.js.map
+
 
 /***/ }),
 
@@ -33898,16 +34981,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./app/style.scss");
+/* harmony import */ var _components_Menu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Menu */ "./app/components/Menu.js");
+/* harmony import */ var _components_Form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Form */ "./app/components/Form.js");
+/* harmony import */ var _components_Footer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/Footer */ "./app/components/Footer.js");
+
+
+ // components 
 
 
 
 
-function ExampleComponent() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", null, "thing@"));
+
+function CalcInterface() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Menu__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Form__WEBPACK_IMPORTED_MODULE_4__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Footer__WEBPACK_IMPORTED_MODULE_5__["default"], null));
 }
 
 const root = react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot(document.querySelector("#app"));
-root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(ExampleComponent, null));
+root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(CalcInterface, null));
 })();
 
 /******/ })()
