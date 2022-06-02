@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import CurrencyInput from "react-currency-input-field"
 import Results from './Results'
 import { BoomerWageInput, BoomerYearInput, ZWageInput, ZYearInput } from './InputFields'
 

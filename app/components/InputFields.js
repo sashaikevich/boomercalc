@@ -1,11 +1,11 @@
 import React from 'react'
-import CurrencyInput from 'react-currency-input-field'
+// import input from 'react-currency-input-field'
 
 
 export function BoomerWageInput(props) {
   return <div>
     <label htmlFor="boomerWage">boomer wage</label>
-    <CurrencyInput
+    <input
       id="boomerWage"
       name="boomerWage"
       prefix="$"
@@ -33,7 +33,7 @@ export function BoomerYearInput(props) {
 export function ZWageInput(props) {
   return <div>
     <label htmlFor="zWage">z wage</label>
-    <CurrencyInput
+    <input
       id="zWage"
       name="zWage"
       prefix="$"
