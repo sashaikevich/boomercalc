@@ -37,11 +37,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_currency_input_field__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-currency-input-field */ "./node_modules/react-currency-input-field/dist/index.esm.js");
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../data */ "./app/data.js");
-/* harmony import */ var _Results__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Results */ "./app/components/Results.js");
-/* harmony import */ var _InputFields__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./InputFields */ "./app/components/InputFields.js");
+/* harmony import */ var _Results__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Results */ "./app/components/Results.js");
+/* harmony import */ var _InputFields__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./InputFields */ "./app/components/InputFields.js");
+/* harmony import */ var _data_cpi_us__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../data/cpi-us */ "./app/data/cpi-us.js");
+/* harmony import */ var _data_upenn_tuition__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../data/upenn-tuition */ "./app/data/upenn-tuition.js");
 
 
+
+ // data 
 
 
 
@@ -50,7 +53,7 @@ function Form() {
   const [boomerWage, setBoomerWage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(3.05);
   const [boomerYear, setBoomerYear] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(1985);
   const [zYear, setZYear] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(2022);
-  const [zWage, setZWage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(9.20);
+  const [zWage, setZWage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(7.75);
   const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [showExtraFields, setShowExtraFields] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [showResults, setShowResults] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
@@ -68,7 +71,7 @@ function Form() {
   }
 
   function handleCalculation() {
-    // if (boomerWage == undefined) {
+    setShowResults(false); // if (boomerWage == undefined) {
     //   setErrors(prev => prev.concat('Please provide an hourly wage'))
     //   return
     // }
@@ -76,17 +79,29 @@ function Form() {
     //   setErrors(prev => prev.concat('Please provide an hourly wage'))
     //   return
     // }
+
     setBoomerYear(prev => limitYearsRange(prev));
     setZYear(prev => limitYearsRange(prev));
     setBoomerWage(prev => prev == 0 ? 1 : Math.abs(prev));
     setZWage(prev => prev == 0 ? 1 : Math.abs(prev));
-    const boomerCPI = _data__WEBPACK_IMPORTED_MODULE_2__["default"].years.filter(year => year.year == boomerYear)[0].cpi;
-    const zCPI = _data__WEBPACK_IMPORTED_MODULE_2__["default"].years.filter(year => year.year == zYear)[0].cpi;
+    const boomerCPI = _data_cpi_us__WEBPACK_IMPORTED_MODULE_4__["default"].years.filter(year => year.year == boomerYear)[0].cpi;
+    const zCPI = _data_cpi_us__WEBPACK_IMPORTED_MODULE_4__["default"].years.filter(year => year.year == zYear)[0].cpi;
+    const boomerSchoolCost = _data_upenn_tuition__WEBPACK_IMPORTED_MODULE_5__["default"].years.filter(year => year.year == boomerYear)[0].tuition;
+    const zSchoolCost = _data_upenn_tuition__WEBPACK_IMPORTED_MODULE_5__["default"].years.filter(year => year.year == zYear)[0].tuition;
+
+    function hoursPerWeek(totalHrs) {
+      const NUM_WORK_WEEKS = 50;
+      return totalHrs / NUM_WORK_WEEKS;
+    }
+
     setCalculations({
       boomerCPI,
       zCPI,
       boomerWage,
-      zWage
+      zWage,
+      boomerSchoolCost,
+      zSchoolCost,
+      hoursPerWeek
     });
     setShowResults(true);
   }
@@ -99,24 +114,24 @@ function Form() {
     className: "user-inputs-wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "boomer-inputs"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.BoomerWageInput, {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h4", null, "Boomer"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_3__.BoomerWageInput, {
     boomerWage: boomerWage,
     setBoomerWage: setBoomerWage
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.BoomerYearInput, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_3__.BoomerYearInput, {
     boomerYear: boomerYear,
     setBoomerYear: setBoomerYear
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "z-inputs"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.ZWageInput, {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h4", null, "you"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_3__.ZWageInput, {
     zWage: zWage,
     setZWage: setZWage
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_4__.ZYearInput, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_InputFields__WEBPACK_IMPORTED_MODULE_3__.ZYearInput, {
     zYear: zYear,
     setZYear: setZYear,
     showExtraFields: showExtraFields
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     onClick: () => handleCalculation()
-  }, "Calculate"), showResults ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Results__WEBPACK_IMPORTED_MODULE_3__["default"], calculations) : "");
+  }, "Calculate"), showResults ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Results__WEBPACK_IMPORTED_MODULE_2__["default"], calculations) : "");
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Form); // onValueChange={(value, name) => console.log(value, name)}
@@ -236,21 +251,27 @@ function Results({
   boomerCPI,
   zCPI,
   boomerWage,
-  zWage
+  zWage,
+  boomerSchoolCost,
+  zSchoolCost,
+  hoursPerWeek
 }) {
+  const factor = boomerCPI / zCPI;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", {
     className: "results-wrapper"
-  }, "boomer cpi: ", boomerCPI, "z cpi: ", zCPI, "results ", boomerCPI / zCPI * boomerWage);
+  }, "boomer cpi: ", boomerCPI, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), "z cpi: ", zCPI, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), "factor: ", factor, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), "boomer's wage adjusted for today: ", Math.round(boomerWage * 100 / factor) / 100, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), "z's wage adjusted for yesteryear: ", Math.round(zWage * 100 * factor) / 100, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+    className: "schoooling"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, "boomer hours needed: ", hoursPerWeek(boomerSchoolCost / boomerWage)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, "z hours needed: ", hoursPerWeek(zSchoolCost / zWage)))));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Results);
 
 /***/ }),
 
-/***/ "./app/data.js":
-/*!*********************!*\
-  !*** ./app/data.js ***!
-  \*********************/
+/***/ "./app/data/cpi-us.js":
+/*!****************************!*\
+  !*** ./app/data/cpi-us.js ***!
+  \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -491,6 +512,260 @@ __webpack_require__.r(__webpack_exports__);
   }, {
     year: "2022",
     cpi: 285.369
+  }]
+});
+
+/***/ }),
+
+/***/ "./app/data/upenn-tuition.js":
+/*!***********************************!*\
+  !*** ./app/data/upenn-tuition.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  "last-updated": "May 2022",
+  "source": "https://archives.upenn.edu/exhibits/penn-history/tuition/",
+  "description": "Tuition only for an arts and science",
+  "years": [{
+    year: "1946",
+    tuition: 400
+  }, {
+    year: "1947",
+    tuition: 500
+  }, {
+    year: "1948",
+    tuition: 500
+  }, {
+    year: "1949",
+    tuition: 500
+  }, {
+    year: "1950",
+    tuition: 500
+  }, {
+    year: "1951",
+    tuition: 500
+  }, {
+    year: "1952",
+    tuition: 700
+  }, {
+    year: "1953",
+    tuition: 700
+  }, {
+    year: "1954",
+    tuition: 700
+  }, {
+    year: "1955",
+    tuition: 800
+  }, {
+    year: "1956",
+    tuition: 800
+  }, {
+    year: "1957",
+    tuition: 800
+  }, {
+    year: "1958",
+    tuition: 900
+  }, {
+    year: "1959",
+    tuition: 1000
+  }, {
+    year: "1960",
+    tuition: 1200
+  }, {
+    year: "1961",
+    tuition: 1400
+  }, {
+    year: "1962",
+    tuition: 1400
+  }, {
+    year: "1963",
+    tuition: 1400
+  }, {
+    year: "1964",
+    tuition: 1400
+  }, {
+    year: "1965",
+    tuition: 1530
+  }, {
+    year: "1966",
+    tuition: 1730
+  }, {
+    year: "1967",
+    tuition: 1730
+  }, {
+    year: "1968",
+    tuition: 1950
+  }, {
+    year: "1969",
+    tuition: 2150
+  }, {
+    year: "1970",
+    tuition: 2350
+  }, {
+    year: "1971",
+    tuition: 2450
+  }, {
+    year: "1972",
+    tuition: 2750
+  }, {
+    year: "1973",
+    tuition: 2900
+  }, {
+    year: "1974",
+    tuition: 3100
+  }, {
+    year: "1975",
+    tuition: 3710
+  }, {
+    year: "1976",
+    tuition: 4050
+  }, {
+    year: "1977",
+    tuition: 4395
+  }, {
+    year: "1978",
+    tuition: 4770
+  }, {
+    year: "1979",
+    tuition: 5195
+  }, {
+    year: "1980",
+    tuition: 5920
+  }, {
+    year: "1981",
+    tuition: 6900,
+    notes: "approximated, because fees were added to tuition for this year"
+  }, {
+    year: "1982",
+    tuition: 7100,
+    notes: "approximated, lacking an exact figure for this year"
+  }, {
+    year: "1983",
+    tuition: 8850
+  }, {
+    year: "1984",
+    tuition: 9565
+  }, {
+    year: "1985",
+    tuition: 10355
+  }, {
+    year: "1986",
+    tuition: 11165
+  }, {
+    year: "1987",
+    tuition: 11936
+  }, {
+    year: "1988",
+    tuition: 12708
+  }, {
+    year: "1989",
+    tuition: 13622
+  }, {
+    year: "1990",
+    tuition: 14608
+  }, {
+    year: "1991",
+    tuition: 15619
+  }, {
+    year: "1992",
+    tuition: 16546
+  }, {
+    year: "1993",
+    tuition: 17530
+  }, {
+    year: "1994",
+    tuition: 18530
+  }, {
+    year: "1995",
+    tuition: 19568
+  }, {
+    year: "1996",
+    tuition: 20644
+  }, {
+    year: "1997",
+    tuition: 21378
+  }, {
+    year: "1998",
+    tuition: 22716
+  }, {
+    year: "1999",
+    tuition: 23670
+  }, {
+    year: "2000",
+    tuition: 24688
+  }, {
+    year: "2001",
+    tuition: 25750
+  }, {
+    year: "2002",
+    tuition: 26910
+  }, {
+    year: "2003",
+    tuition: 28040
+  }, {
+    year: "2004",
+    tuition: 29386
+  }, {
+    year: "2005",
+    tuition: 30796
+  }, {
+    year: "2006",
+    tuition: 32182
+  }, {
+    year: "2007",
+    tuition: 33630
+  }, {
+    year: "2008",
+    tuition: 24000,
+    notes: "unexplained drop in cost"
+  }, {
+    year: "2009",
+    tuition: 24720
+  }, {
+    year: "2010",
+    tuition: 25660
+  }, {
+    year: "2011",
+    tuition: 26660
+  }, {
+    year: "2012",
+    tuition: 27700
+  }, {
+    year: "2013",
+    tuition: 28768
+  }, {
+    year: "2014",
+    tuition: 29890
+  }, {
+    year: "2015",
+    tuition: 31068
+  }, {
+    year: "2016",
+    tuition: 32286
+  }, {
+    year: "2017",
+    tuition: 33604
+  }, {
+    year: "2018",
+    tuition: 34882
+  }, {
+    year: "2019",
+    tuition: 36254
+  }, {
+    year: "2020",
+    tuition: 37678
+  }, {
+    year: "2021",
+    tuition: 38732
+  }, {
+    year: "2022",
+    tuition: 38732,
+    notes: "approximated"
   }]
 });
 
