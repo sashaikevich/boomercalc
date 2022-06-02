@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react"
 import CurrencyInput from "react-currency-input-field"
-import data from "../data"
 import Results from './Results'
 import { BoomerWageInput, BoomerYearInput, ZWageInput, ZYearInput } from './InputFields'
+
+// data 
+import dataCpiUs from "../data/cpi-us"
+import artsTuition from "../data/upenn-tuition"
 
 function Form() {
   const [boomerWage, setBoomerWage] = useState(3.05)
   const [boomerYear, setBoomerYear] = useState(1985)
   const [zYear, setZYear] = useState(2022)
-  const [zWage, setZWage] = useState(9.20)
+  const [zWage, setZWage] = useState(7.75)
   const [errors, setErrors] = useState([])
   const [showExtraFields, setShowExtraFields] = useState(false)
   const [showResults, setShowResults] = useState(false)
@@ -30,6 +33,7 @@ function Form() {
   }
 
   function handleCalculation() {
+    setShowResults(false)
     // if (boomerWage == undefined) {
     //   setErrors(prev => prev.concat('Please provide an hourly wage'))
     //   return
@@ -41,12 +45,19 @@ function Form() {
 
     setBoomerYear(prev => limitYearsRange(prev))
     setZYear(prev => limitYearsRange(prev))
-    setBoomerWage(prev => prev == 0 ? 1 : Math.abs(prev) )
-    setZWage(prev => prev == 0 ? 1 : Math.abs(prev) )
+    setBoomerWage(prev => prev == 0 ? 1 : Math.abs(prev))
+    setZWage(prev => prev == 0 ? 1 : Math.abs(prev))
 
-    const boomerCPI = data.years.filter(year => year.year == boomerYear)[0].cpi
-    const zCPI = data.years.filter(year => year.year == zYear)[0].cpi
-    setCalculations({ boomerCPI, zCPI, boomerWage, zWage })
+    const boomerCPI = dataCpiUs.years.filter(year => year.year == boomerYear)[0].cpi
+    const zCPI = dataCpiUs.years.filter(year => year.year == zYear)[0].cpi
+    const boomerSchoolCost = artsTuition.years.filter(year => year.year == boomerYear)[0].tuition
+    const zSchoolCost = artsTuition.years.filter(year => year.year == zYear)[0].tuition
+
+    function hoursPerWeek(totalHrs){
+      const NUM_WORK_WEEKS = 50
+      return totalHrs/NUM_WORK_WEEKS
+    }
+    setCalculations({ boomerCPI, zCPI, boomerWage, zWage, boomerSchoolCost, zSchoolCost, hoursPerWeek })
     setShowResults(true)
 
   }
@@ -59,11 +70,13 @@ function Form() {
     <button onClick={() => { setShowExtraFields(prev => !prev) }}>show fields</button>
     <section className="user-inputs-wrapper">
       <div className="boomer-inputs">
+        <h4>Boomer</h4>
         <BoomerWageInput boomerWage={boomerWage} setBoomerWage={setBoomerWage} />
         <BoomerYearInput boomerYear={boomerYear} setBoomerYear={setBoomerYear} />
       </div>
 
       <div className="z-inputs">
+        <h4>you</h4>
         <ZWageInput zWage={zWage} setZWage={setZWage} />
         <ZYearInput zYear={zYear} setZYear={setZYear} showExtraFields={showExtraFields} />
       </div>
