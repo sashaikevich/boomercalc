@@ -1,11 +1,11 @@
 import React from "react";
-function Results({ boomerCPI, zCPI, boomerWage, zWage, boomerSchoolCost, zSchoolCost, hoursPerWeek }) {
+function Calculations({ boomerCPI, zCPI, boomerWage, zWage, boomerSchoolCost, zSchoolCost, hoursPerWeek }) {
   const factor = boomerCPI / zCPI
 
   return (
-    < section className="results-wrapper" >
-      {/* <p>{props.calcResults.boomerCPI}</p>
-      <p>{JSON.stringify(props.calcResults.zCPI)}</p>
+    < section className="calculations-wrapper" >
+      {/* <p>{props.calcCalculations.boomerCPI}</p>
+      <p>{JSON.stringify(props.calcCalculations.zCPI)}</p>
       {((100 * (props.zCPI) / props.boomerCPI) * props.boomerWage).toFixed(2)} */}
       boomer cpi: {boomerCPI}<br />
       z cpi: {zCPI} <br />
@@ -22,4 +22,4 @@ function Results({ boomerCPI, zCPI, boomerWage, zWage, boomerSchoolCost, zSchool
   )
 }
 
-export default Results
+export default Calculations
