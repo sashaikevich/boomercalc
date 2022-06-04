@@ -1,12 +1,26 @@
 import React from "react";
-function Calculations({ boomerCPI, zCPI, boomerWage, zWage, boomerSchoolCost, zSchoolCost, hoursPerWeek }) {
+import dataCpiUs from "../data/cpi-us"
+import artsTuition from "../data/upenn-tuition"
+
+function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
+  
+  const NUM_WORK_WEEKS = 50
+  const boomerCPI = dataCpiUs.years.filter(year => year.year == boomerYear)[0].cpi
+  const zCPI = dataCpiUs.years.filter(year => year.year == zYear)[0].cpi
+  const boomerSchoolCost = artsTuition.years.filter(year => year.year == boomerYear)[0].tuition
+  const zSchoolCost = artsTuition.years.filter(year => year.year == zYear)[0].tuition
+
   const factor = boomerCPI / zCPI
 
+  function hoursPerWeek(totalHrs) {
+    return totalHrs / NUM_WORK_WEEKS
+  }
+
+
+
   return (
-    < section className="calculations-wrapper" >
-      {/* <p>{props.calcCalculations.boomerCPI}</p>
-      <p>{JSON.stringify(props.calcCalculations.zCPI)}</p>
-      {((100 * (props.zCPI) / props.boomerCPI) * props.boomerWage).toFixed(2)} */}
+    < >
+
       boomer cpi: {boomerCPI}<br />
       z cpi: {zCPI} <br />
       factor: {factor} <br />
@@ -18,7 +32,7 @@ function Calculations({ boomerCPI, zCPI, boomerWage, zWage, boomerSchoolCost, zS
           <span>z hours needed: {hoursPerWeek(zSchoolCost / zWage)}</span>
         </li>
       </ul>
-    </section >
+    </ >
   )
 }
 

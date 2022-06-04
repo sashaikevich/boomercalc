@@ -1,7 +1,7 @@
 import React from "react";
 
 function Menu() {
-  return <div>BoomerCalc</div>
+  return <h1>BoomerCalc</h1>
 }
 
 export default Menu

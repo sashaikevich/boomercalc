@@ -4,7 +4,7 @@ import './style.scss'
 
 // components 
 import Menu from './components/Menu'
-import Form from './components/FormAlt'
+import Form from './components/Form'
 import Footer from './components/Footer'
 
 

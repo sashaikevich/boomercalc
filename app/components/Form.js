@@ -1,186 +1,146 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
-function Form({ userInputs, setUserInputs, readyToCalculate, setReadyToCalculate }) {
+import Calculations from './Calculations'
 
-  useEffect(() => {
-    setReadyToCalculate(prev => {
-      return { ...prev, boomerYear: false }
-    })
+function Form() {
+  const DELAY = 1300
+  const MIN_YEAR = 1946
+  const MAX_YEAR = 2022
+  const MAX_DOL = 999.99
+  const MIN_DOL = 0.01
+  const PLACEHOLDER = {
+    boomerWage: 3.05,
+    boomerYear: 1985,
+    zWage: 7.75,
+    zYear: MAX_YEAR
+  }
 
-    let awaitYear = setTimeout(() => {
-      setUserInputs(prev => {
-        return { ...prev, boomerYear: clampYearsRange(prev.boomerYear) }
-      })
+  const [readyToCalc, setReadyToCalc] = useState(true)
 
-      setReadyToCalculate(prev => {
-        return { ...prev, boomerYear: true }
-      })
-    }, 1300)
-    return () => { clearTimeout(awaitYear) }
-  }, [userInputs.boomerYear])
+  const [boomerWage, setBoomerWage] = useState(PLACEHOLDER.boomerWage)
+  const [boomerYear, setBoomerYear] = useState(PLACEHOLDER.boomerYear)
+  const [zWage, setZWage] = useState(PLACEHOLDER.zWage)
+  const [zYear, setZYear] = useState(PLACEHOLDER.zYear)
 
-  useEffect(() => {
-    setReadyToCalculate(prev => {
-      return { ...prev, zYear: false }
-    })
+  const timmyRef = useRef(null);
+  const boomerWageRef = useRef(null)
+  const boomerYearRef = useRef(null)
+  const zWageRef = useRef(null)
+  const zYearRef = useRef(null)
 
-    let awaitYear = setTimeout(() => {
-      setUserInputs(prev => {
-        return { ...prev, zYear: clampYearsRange(prev.zYear) }
-      })
-      setReadyToCalculate(prev => {
-        return { ...prev, zYear: true }
-      })
-    }, 1300)
-    return () => { clearTimeout(awaitYear) }
-  }, [userInputs.zYear])
+  function clampRange(val, min, max) {
+    if (val > max) return max
+    if (val < min) return min
+    return val
+  }
 
-  useEffect(() => {
-    setReadyToCalculate(prev => {
-      return { ...prev, boomerWage: false }
-    })
-
-    let awaitWage = setTimeout(() => {
-      setUserInputs(prev => {
-        return { ...prev, boomerWage: normalizeWage(prev.boomerWage) }
-      })
-      setReadyToCalculate(prev => {
-        return { ...prev, boomerWage: true }
-      })
-    }, 1300)
-    return () => { clearTimeout(awaitWage) }
-  }, [userInputs.boomerWage])
-
-  useEffect(() => {
-    setReadyToCalculate(prev => {
-      return { ...prev, zWage: false }
-    })
-
-    let awaitWage = setTimeout(() => {
-      setUserInputs(prev => {
-        return { ...prev, zWage: normalizeWage(prev.zWage) }
-      })
-      setReadyToCalculate(prev => {
-        return { ...prev, zWage: true }
-      })
-    }, 1300)
-    return () => { clearTimeout(awaitWage) }
-  }, [userInputs.zWage])
-
-  useEffect(() => {
-    if (readyToCalculate.boomerWage && readyToCalculate.boomerYear && readyToCalculate.zWage && readyToCalculate.zYear) {
-      console.log('ready to claculate')
+  function limitCharacters(e) {
+    let value = e.target.value
+    // match anything that's not a number or dot
+    const rex = /[^\.0-9]/g
+    if (rex.test(value)) {
+      value = value.replace(rex, '');
     }
-  }, [readyToCalculate])
-
-  function handleYear(e) {
-    setUserInputs(prev => {
-      return { ...prev, [e.target.name]: e.target.value }
-    })
+    e.target.value = value
   }
 
-  function clampYearsRange(year) {
-    const maxYear = 2022
-    const minYear = 1946
+  function wageHandler(e) {
+    let safeVal = parseFloat(e.target.value).toFixed(2)
+    safeVal = clampRange(safeVal, MIN_DOL, MAX_DOL)
 
-    if (year > maxYear) return maxYear
-    if (year < minYear) return minYear
-    return year
+    if (e.target.name == "boomerWage") {
+      setBoomerWage(safeVal)
+      boomerWageRef.current.value = safeVal
+      boomerWageRef.current.style = `width: ${calcInputWidth(boomerWage)}px`
+    }
+    else if (e.target.name == "zWage") {
+      setZWage(safeVal)
+      zWageRef.current.value = safeVal
+    }
+  }
+
+  function yearHandler(e) {
+    let safeVal = clampRange(e.target.value, MIN_YEAR, MAX_YEAR)
+    if (e.target.name == "boomerYear") {
+      setBoomerYear(safeVal)
+      boomerYearRef.current.value = safeVal
+    } else if (e.target.name == "zYear") {
+      setZYear(safeVal)
+      zYearRef.current.value = safeVal
+    }
+  }
+
+  function boolCorrectUserData() {
+    if (boomerYear < MIN_YEAR || boomerYear > MAX_YEAR) return false
+    if (zYear < MIN_YEAR || zYear > MAX_YEAR) return false
+    return true
   }
 
 
-  function handleWage(e) {
-    setUserInputs(prev => {
-      return { ...prev, [e.target.name]: limitToTwoDecimals(e.target.value) }
-    })
+  function handleChange(e, fieldHandler) {
+    clearTimeout(timmyRef.current)
+    setReadyToCalc(false)
+    timmyRef.current = setTimeout(() => {
+      fieldHandler(e)
+      setReadyToCalc(boolCorrectUserData())
+    }, DELAY)
   }
 
-  function limitToTwoDecimals(wage) {
-    return wage.toString().split(".").map((el, i) => i ? el.split("").slice(0, 2).join("") : el).join(".")
 
-  }
+  useEffect(() => {
+    boomerWageRef.current.value = PLACEHOLDER.boomerWage
+    boomerYearRef.current.value = PLACEHOLDER.boomerYear
+    zWageRef.current.value = PLACEHOLDER.zWage
+    zYearRef.current.value = PLACEHOLDER.zYear
+  }, [])
 
-  function normalizeWage(wage) {
-    wage = parseFloat(wage)
-    return isNaN(wage) ? (1).toFixed(2) : Math.abs(wage).toFixed(2)
-  }
-
-  function handleCalculations() {
-    setShowCalculations(false)
-
-    setUserInputs.boomerYear(prev => clampYearsRange(prev))
-    setUserInputs.boomerWage(prev => prev == 0 ? 1 : Math.abs(prev))
-    setUserInputs.zYear(prev => clampYearsRange(prev))
-    setUserInputs.zWage(prev => prev == 0 ? 1 : Math.abs(prev))
-
-    // const boomerCPI = dataCpiUs.years.filter(year => year.year == boomerYear)[0].cpi
-    // const zCPI = dataCpiUs.years.filter(year => year.year == zYear)[0].cpi
-    // const boomerSchoolCost = artsTuition.years.filter(year => year.year == boomerYear)[0].tuition
-    // const zSchoolCost = artsTuition.years.filter(year => year.year == zYear)[0].tuition
-
-    // function hoursPerWeek(totalHrs) {
-    //   const NUM_WORK_WEEKS = 50
-    //   return totalHrs / NUM_WORK_WEEKS
-    // }
-    // setCalculations({ boomerCPI, zCPI, boomerWage, zWage, boomerSchoolCost, zSchoolCost, hoursPerWeek })
-    // setShowCalculations(true)
-  }
 
   return <>
     <section className="user-inputs-wrapper">
       <div className="boomer-inputs">
-        <h4>Boomer</h4>
-        <div>
-          <input
-            id="boomerWage"
-            name="boomerWage"
-            value={userInputs.boomerWage}
-            onChange={handleWage}
-          />
-          <label htmlFor="boomerWage">boomer wage</label>
-        </div>
+        <input
+          type="text"
+          ref={boomerWageRef}
+          id="boomerWage"
+          name="boomerWage"
+          onKeyUp={limitCharacters}
+          onChange={(e) => handleChange(e, wageHandler)}
+        />
 
-        <div>
-          <input
-            value={userInputs.boomerYear}
-            name="boomerYear"
-            min="1946"
-            max="2022"
-            type="number"
-            onChange={handleYear}
-          />
-          <label htmlFor="boomerYear">boomer year</label>
-        </div>
-
+        in: <input
+          type="number"
+          ref={boomerYearRef}
+          id="boomerYear"
+          name="boomerYear"
+          min={MIN_YEAR}
+          max={MAX_YEAR}
+          onChange={(e) => handleChange(e, yearHandler)}
+        />
       </div>
 
       <div className="z-inputs">
-        <h4>you</h4>
-        <div>
-          <input
-            id="zWage"
-            name="zWage"
-            value={userInputs.zWage}
-            onChange={handleWage}
-          />
-          <label htmlFor="zWage">z wage</label>
-        </div>
-
-        <div className={`extra-field ${userInputs.showExtraFields ? "extra-field--visible" : ""}`}>
-          <input
-            value={userInputs.zYear}
-            name="zYear"
-            min="1946"
-            max="2022"
-            type="number"
-            onChange={handleYear}
-          />
-          <label htmlFor="zYear">z year</label>
-        </div>
+        <input type="text"
+          ref={zWageRef}
+          id="zWage"
+          name="zWage"
+          onKeyUp={limitCharacters}
+          onChange={(e) => handleChange(e, wageHandler)}
+        />
+        in: <input
+          type="number"
+          ref={zYearRef}
+          id="zYear"
+          name="zYear"
+          min={MIN_YEAR}
+          max={MAX_YEAR}
+          onChange={(e) => handleChange(e, yearHandler)
+          }
+        />
       </div>
     </section>
-
-    <button onClick={() => handleCalculation()}>Calculate</button>
+    <section className="calculations-wrapper">
+      {readyToCalc ? <Calculations boomerWage={boomerWage} boomerYear={boomerYear} zWage={zWage} zYear={zYear} /> : "awaiting input..."}
+    </section>
   </>
 }
 export default Form
