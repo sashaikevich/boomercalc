@@ -312,7 +312,7 @@ export default {
     },
     {
       year: "2022",
-      tuition:38732,
+      tuition:39815,
       notes: "approximated"
     }
   ]

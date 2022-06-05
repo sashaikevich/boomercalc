@@ -1,11 +1,14 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
 
+$main-color: #ffc63e;
+$inverse-color: #fff;
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  background: #ffc63e;
+  background: $main-color;
   max-width: 100vw;
   overflow-x: hidden;
   font-family: sans-serif;
@@ -15,33 +18,63 @@ body {
     text-align: center;
   }
 
+  .inverse {
+    color: $inverse-color;
+    font-size: 1.25em;
+    // text-shadow: 2px 2px 0 #000;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .container {
+    max-width: 48em;
+    margin-left: auto;
+    margin-right: auto;
+
+    &--with-border {
+      border: 5px solid #fff;
+    }
+  }
+
+
+
+
+  .time-period {
+    margin: .5em 0;
+
+    #today {
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 1.1em;
+    }
+  }
+
   .user-inputs-wrapper {
     display: grid;
-    grid-template-columns: 1fr 5rem 1fr;
-    width: 46rem;
-    border: 5px solid #fff;
-    margin: 0 auto;
-    
+    grid-template-columns: 1fr 7em 1fr;
+    margin: 0 auto 3em;
+
+    .boomer-inputs,
+    .z-inputs {
+      padding: 3em 0 2em;
+    }
+
     .boomer-inputs {
-      padding-top: 2em;
       text-align: right;
-    }
-
-    .divider {
-      position: relative;
-      border-left: 5px solid #fff;
-    }
-
-    input[type=number]::-webkit-inner-spin-button {
-      opacity: 1; // make arrows always visible (at least in chrome)
     }
 
     input {
       border: none;
       outline: none;
-      background-color: transparent;
       overflow: hidden;
       box-sizing: border-box;
+      padding: 0;
+
+      &[type=number]::-webkit-inner-spin-button {
+        opacity: 1; // make arrows always visible (at least in chrome)
+      }
 
       &#boomerWage {
         text-align: right;
@@ -49,24 +82,85 @@ body {
 
       &#boomerWage,
       &#zWage {
-        // display: block;
-        font-size: 6rem;
+        background-color: transparent;
+        font-size: 6em;
         width: 6ch;
-        border: 2px solid red;
         padding: 0;
         text-decoration: underline;
         line-height: 1;
       }
+
+      &#boomerYear,
+      &#zYear {
+        padding-left: 0.3em;
+      }
     }
 
-    
+    .divider {
+      position: relative;
+
+      &::before,
+      &::after {
+        display: block;
+        position: absolute;
+        background-color: #fff;
+        left: 50%;
+      }
+
+      &::before {
+        content: "";
+        width: 5px;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-50%);
+      }
+
+      &::after {
+        content: "$/hr";
+        font-weight: bold;
+        text-align: center;
+        width: 3em;
+        height: 3em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100vh;
+        top: 50%;
+        transform: translate(-50%, -50%)
+      }
+    }
   }
 
   .calculations-wrapper {
-    background-color: #fff;
-    max-width: 50%;
-    border: 5px solid #fff;
-    margin: 0 auto;
-    padding: 2rem;
+    text-align: center;
+
+    .context-text {
+      padding: 1em 0;
+
+      &+.context-text {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          content: "";
+          display: block;
+          width: 15px;
+          height: 5px;
+          background: #000;
+          top: 0;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+        }
+      }
+
+      p {
+        font-size: 2.5em;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: 800;
+      }
+
+
+    }
   }
 }

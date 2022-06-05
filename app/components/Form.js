@@ -1,3 +1,7 @@
+//  issues:
+// tabing through fields doesn't correct them (try "100" tab tab 100 - it won't add the 00 to boomer)
+// NaN error
+
 import React, { useEffect, useState, useRef } from 'react'
 
 import Calculations from './Calculations'
@@ -95,7 +99,7 @@ function Form() {
 
 
   return <>
-    <section className="user-inputs-wrapper">
+    <section className="user-inputs-wrapper container container--with-border">
       <div className="boomer-inputs">
         <input
           type="text"
@@ -119,7 +123,7 @@ function Form() {
         </p>
       </div>
 
-<div className="divider">$/hr</div>
+      <div className="divider"></div>
       <div className="z-inputs">
         <input type="text"
           ref={zWageRef}
@@ -129,7 +133,8 @@ function Form() {
           onChange={(e) => handleChange(e, wageHandler)}
         />
         <p className="time-period">
-          in: <input
+          <span id="today">today</span>
+          <span className="hidden">in: <input
             type="number"
             ref={zYearRef}
             id="zYear"
@@ -139,11 +144,12 @@ function Form() {
             onChange={(e) => handleChange(e, yearHandler)
             }
           />
+          </span>
         </p>
       </div>
     </section>
     <section className="calculations-wrapper">
-      {readyToCalc ? <Calculations boomerWage={boomerWage} boomerYear={boomerYear} zWage={zWage} zYear={zYear} /> : "awaiting input..."}
+      {readyToCalc ? <Calculations boomerWage={boomerWage} boomerYear={boomerYear} zWage={zWage} zYear={zYear} /> : "traveling back in time..."}
     </section>
   </>
 }
