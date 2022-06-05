@@ -51,7 +51,6 @@ function Form() {
     if (e.target.name == "boomerWage") {
       setBoomerWage(safeVal)
       boomerWageRef.current.value = safeVal
-      boomerWageRef.current.style = `width: ${calcInputWidth(boomerWage)}px`
     }
     else if (e.target.name == "zWage") {
       setZWage(safeVal)
@@ -107,17 +106,20 @@ function Form() {
           onChange={(e) => handleChange(e, wageHandler)}
         />
 
-        in: <input
-          type="number"
-          ref={boomerYearRef}
-          id="boomerYear"
-          name="boomerYear"
-          min={MIN_YEAR}
-          max={MAX_YEAR}
-          onChange={(e) => handleChange(e, yearHandler)}
-        />
+        <p className="time-period">
+          in: <input
+            type="number"
+            ref={boomerYearRef}
+            id="boomerYear"
+            name="boomerYear"
+            min={MIN_YEAR}
+            max={MAX_YEAR}
+            onChange={(e) => handleChange(e, yearHandler)}
+          />
+        </p>
       </div>
 
+<div className="divider">$/hr</div>
       <div className="z-inputs">
         <input type="text"
           ref={zWageRef}
@@ -126,16 +128,18 @@ function Form() {
           onKeyUp={limitCharacters}
           onChange={(e) => handleChange(e, wageHandler)}
         />
-        in: <input
-          type="number"
-          ref={zYearRef}
-          id="zYear"
-          name="zYear"
-          min={MIN_YEAR}
-          max={MAX_YEAR}
-          onChange={(e) => handleChange(e, yearHandler)
-          }
-        />
+        <p className="time-period">
+          in: <input
+            type="number"
+            ref={zYearRef}
+            id="zYear"
+            name="zYear"
+            min={MIN_YEAR}
+            max={MAX_YEAR}
+            onChange={(e) => handleChange(e, yearHandler)
+            }
+          />
+        </p>
       </div>
     </section>
     <section className="calculations-wrapper">
