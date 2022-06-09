@@ -1,6 +1,6 @@
 export default {
-  "last-updated": "May 2022",
-  "source": "https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/",
+  "last-updated": "June 2022",
+  "sources": ["https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/"],
   "years": [
     {
       year: "1946",

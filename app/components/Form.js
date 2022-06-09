@@ -1,6 +1,7 @@
 //  issues:
 // tabing through fields doesn't correct them (try "100" tab tab 100 - it won't add the 00 to boomer)
 // NaN error
+// todo fix the two bar graphs... or make it a pie chart
 
 import React, { useEffect, useState, useRef } from 'react'
 

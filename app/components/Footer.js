@@ -1,7 +1,9 @@
 import React from "react";
 
+import Credits from './Credits'
+
 function Footer() {
-  return <div>footer</div>
+  return <Credits/>
 }
 
 export default Footer

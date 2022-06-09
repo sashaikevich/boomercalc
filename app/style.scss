@@ -1,7 +1,9 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
 
+// $main-color: hsl(168, 61%, 60%);
 $main-color: #ffc63e;
-$inverse-color: #fff;
+$light-color: #fff;
+$dark: #000;
 
 * {
   box-sizing: border-box;
@@ -11,18 +13,39 @@ body {
   background: $main-color;
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: sans-serif;
+  font-family: 'Times New Roman', Times, serif;
+
+  .header {
+    padding: 2em 0;
+
+    img {
+      max-width: clamp(200px, 25%, 15em);
+      margin: 0 auto;
+    }
+  }
 
   h1 {
     color: #fff;
     text-align: center;
   }
 
-  .inverse {
-    color: $inverse-color;
-    font-size: 1.25em;
-    // text-shadow: 2px 2px 0 #000;
+  img {
+    width: 100%;
+    display: block;
   }
+
+  .light-color {
+    color: $light-color;
+    font-size: 1.25em;
+    font-size: 1.1em;
+
+    &--with-bg {
+      display: inline-block;
+      background: #000;
+      padding: 0 0.06em;
+    }
+  }
+
 
   .hidden {
     display: none;
@@ -35,10 +58,27 @@ body {
 
     &--with-border {
       border: 5px solid #fff;
+
+      &+.container--with-border {
+        margin-top: -5px;
+      }
     }
   }
 
+  p.context {
+    font-size: 2em;
+    font-weight: 800;
+    line-height: 1.35;
 
+    &--smaller {
+      font-size: 1.2em;
+    }
+  }
+
+  .legend {
+    font-size: 0.9em;
+    font-style: italic;
+  }
 
 
   .time-period {
@@ -52,6 +92,7 @@ body {
   }
 
   .user-inputs-wrapper {
+    font-family: sans-serif;
     display: grid;
     grid-template-columns: 1fr 7em 1fr;
     margin: 0 auto 3em;
@@ -119,8 +160,8 @@ body {
         content: "$/hr";
         font-weight: bold;
         text-align: center;
-        width: 3em;
-        height: 3em;
+        width: 3.5em;
+        height: 3.5em;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -134,33 +175,137 @@ body {
   .calculations-wrapper {
     text-align: center;
 
-    .context-text {
-      padding: 1em 0;
+    article {
 
-      &+.context-text {
-        position: relative;
+      &.history-dollar {
+        display: grid;
+        grid-template-columns: 75% 25%;
 
-        &::before {
-          position: absolute;
-          content: "";
-          display: block;
-          width: 15px;
-          height: 5px;
-          background: #000;
-          top: 0;
-          left: 0;
-          right: 0;
-          margin: 0 auto;
+        .history-dollar__text {
+          padding: 2em 3em 2em 2em;
+          text-align: right;
+        }
+
+        .history-dollar__graphic {
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          padding-top: 1em;
         }
       }
 
-      p {
-        font-size: 2.5em;
-        font-family: 'Times New Roman', Times, serif;
-        font-weight: 800;
+      &.college-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background-color: $light-color;
+
+        .college-stats__graphic {
+          padding-top: 2em;
+
+        }
+
+        .college-stats__text {
+          text-align: left;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 0 2em 0 3em;
+        }
       }
 
+      &.upenn-chart {
+        padding: 2em 1em 0 0.5em;
 
+        p.context {
+          margin: 0;
+        }
+      }
+
+      &.uni-real-cost {
+        display: grid;
+        grid-template-columns: 25% 75%;
+
+        .uni-real-cost__graphic {
+          padding: 2em 0.5em 0.5em;
+
+        }
+
+        .uni-real-cost__text {
+          background-color: $light-color;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          text-align: left;
+          padding: 2em 3em 2em;
+
+          p+p {
+            margin-top: 0;
+          }
+        }
+      }
+
+      &.place-to-live {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .place-to-live__text {
+          padding-right: 3em;
+          text-align: right;
+          display: flex;
+          justify-content: end;
+          align-items: center;
+
+          .context {
+            color: $light-color;
+            max-width: 7em;
+          }
+        }
+
+        .place-to-live__graphic {
+          padding-top: 2em;
+        }
+      }
+
+      &.rent-chart {
+        display: grid;
+        grid-template-columns: 25% 75%;
+
+        .rent-chart__graphic {
+          padding: 2em 0.5em 0.5em;
+          border-right: 5px solid $light-color;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .rent-chart__line-graph {
+          padding: 2em 1em 0;
+
+          p.context {
+            margin: 0;
+          }
+
+          .legend {
+            color: $light-color;
+          }
+        }
+      }
+
+      &.rent-real-cost {
+        background-color: $light-color;
+      }
+
+      &.summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .summary__text {
+          border-right: 5px solid $light-color;
+          padding: 2em 1em;
+        }
+      }
     }
+
+
+
   }
 }

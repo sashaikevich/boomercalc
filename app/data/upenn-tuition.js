@@ -1,6 +1,6 @@
 export default {
   "last-updated": "May 2022",
-  "source": "https://archives.upenn.edu/exhibits/penn-history/tuition/",
+  "sources": ["https://archives.upenn.edu/exhibits/penn-history/tuition/"],
   "description": "Tuition only for an arts and science",
   "years": [
     {

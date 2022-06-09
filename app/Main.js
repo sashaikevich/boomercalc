@@ -6,13 +6,14 @@ import './style.scss'
 import Menu from './components/Menu'
 import Form from './components/Form'
 import Footer from './components/Footer'
-
+import Header from './components/Header'
 
 function CalcInterface() {
   return (
     <>
-      <Menu />
+      <Header />
       <Form />
+      <Menu />
       <Footer />
     </>
   )
