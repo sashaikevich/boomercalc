@@ -1,9 +1,9 @@
 import React from "react";
 
 // data
-import dataCpiUs from "../data/cpi-us"
-import artsTuition from "../data/upenn-tuition"
-import historicRent from "../data/historic-rent"
+import DATA_CPI from "../data/cpi-us"
+import DATA_TUITION from "../data/upenn-tuition"
+import DATA_RENT from "../data/historic-rent"
 
 // images 
 import college from "../imgs/college.svg"
@@ -17,72 +17,77 @@ import { UniPriceChart, WaybackComparison, RentLine } from './Chart'
 
 
 function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
-  // TODO turn most of these into objects - cpi, wage, unicost, rentcost
 
-  const boomerCPI = dataCpiUs.years.filter(year => year.year == boomerYear)[0].cpi
-  const zCPI = dataCpiUs.years.filter(year => year.year == zYear)[0].cpi
-  const CPIFactor = boomerCPI / zCPI
-
-  const zWageWayback = (zWage * CPIFactor).toFixed(2)
-  const boomerWageToday = (boomerWage / CPIFactor).toFixed(2)
-  const wagePercentChange = calcPercentChange(zWageWayback, boomerWage)
-  
-  const boomerUniCost = artsTuition.years.filter(year => year.year == boomerYear)[0].tuition
-  const zUniCost = artsTuition.years.filter(year => year.year == zYear)[0].tuition
-  const zUniCostWayback = zUniCost * CPIFactor
-  const uniPercentChange = calcPercentChange(zUniCostWayback, boomerUniCost)
-
-  const boomerRentCost = lookupRent(boomerYear)
-  const zRentCost = lookupRent(zYear)
-  const zRentCostWayback = zRentCost * CPIFactor
-  const rentPercentChange = calcPercentChange(zRentCostWayback, boomerRentCost)
-
-
-  function dollarFormat(num, dec = 2) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: dec }).format(num)
+  const CPIS = {
+    boomer: DATA_CPI.years.filter(year => year.year == boomerYear)[0].cpi,
+    z: DATA_CPI.years.filter(year => year.year == zYear)[0].cpi,
+    get factor() { return this.boomer / this.z }
   }
 
-  function calcPercentChange(adjusted, historic) {
-    const obj = {}
-    obj.amount = (Math.abs(1 - adjusted / historic) * 100).toFixed(2)
-    obj.amountFormatted = `${obj.amount}%`
-    obj.isNowHigher = adjusted >= historic
-
-    return obj
+  const WAGES = {
+    boomer: boomerWage,
+    z: zWage,
+    get zWayback() { return (this.z * CPIS.factor).toFixed(2) },
+    get boomerToday() { return (this.boomer / CPIS.factor).toFixed(2) },
   }
 
-  function calcExtraTimeForUni() {
-    let factor = (zUniCost / zWage) / (boomerUniCost / boomerWage)
-
-    let hours = (Math.ceil((40 * factor - 40) * 4) / 4).toFixed(2)
-    hours = new Intl.NumberFormat({ style: 'number', maximumFractionDigits: 2 }).format(hours)
-    return hours + " hours"
+  const UNI_COSTS = {
+    boomer: DATA_TUITION.years.filter(year => year.year == boomerYear)[0].tuition,
+    z: DATA_TUITION.years.filter(year => year.year == zYear)[0].tuition,
+    get zWayback() { return this.z * CPIS.factor }
   }
 
-  function calcExtraTimeForRent() {
-    let factor = (zRentCost / zWage) / (boomerRentCost / boomerWage)
 
-    let hours = (Math.ceil((40 * factor - 40) * 4) / 4).toFixed(2)
-    hours = new Intl.NumberFormat({ style: 'number', maximumFractionDigits: 2 }).format(hours)
-    return hours + " hours"
-  }
+  const RENT_COSTS = {
+    get boomer() { return this.lookupIncompleteData(boomerYear) },
+    get z() { return this.lookupIncompleteData(zYear) },
+    get zWayback() { return this.z * CPIS.factor },
+    lookupIncompleteData: function (yr) {
+      let [...yearsArr] = DATA_RENT.years;
+      let exactMatch = yearsArr.filter(year => year.year == yr)
 
-  function lookupRent(yr) {
-    let [...yearsArr] = historicRent.years;
-    let exactMatch = yearsArr.filter(year => year.year == yr)
+      // if exact match found
+      if (exactMatch.length) {
+        return exactMatch[0].rent
+      }
 
-    // if exact match found
-    if (exactMatch.length) {
-      return exactMatch[0].rent
+      // if exact match NOT found data will have to be estimated from preceeding and subsequent data points that are available
+      yearsArr.sort((yr1, yr2) => yr1.year - yr2.year)
+      let index = yearsArr.findIndex(year => year.year > yr)
+      let lowerBracket = yearsArr[index - 1]
+      let upperBracket = yearsArr[index]
+
+      return lowerBracket.rent + (upperBracket.rent - lowerBracket.rent) / (upperBracket.year - lowerBracket.year) * (yr - lowerBracket.year)
     }
+  }
 
-    // if exact match NOT found data will have to be estimated from preceeding and subsequent data points that are available
-    yearsArr.sort((yr1, yr2) => yr1.year - yr2.year)
-    let index = yearsArr.findIndex(year => year.year > yr)
-    let lowerBracket = yearsArr[index - 1]
-    let upperBracket = yearsArr[index]
+  const PERCENT_CHANGE = {
+    PercentChange: function (wayback, historic) {
+      this.amount = (Math.abs(1 - wayback / historic) * 100).toFixed(2)
+      this.amountFormatted = `${this.amount}%`
+      this.isNowHigher = wayback >= historic
+    },
+    get wage() { return new this.PercentChange(WAGES.zWayback, WAGES.boomer) },
+    get rent() { return new this.PercentChange(RENT_COSTS.zWayback, RENT_COSTS.boomer) },
+    get uni() { return new this.PercentChange(UNI_COSTS.zWayback, UNI_COSTS.boomer) }
+  }
 
-    return lowerBracket.rent + (upperBracket.rent - lowerBracket.rent) / (upperBracket.year - lowerBracket.year) * (yr - lowerBracket.year)
+  function extraTimeNeeded(expenseObj) {
+    let factor = ((expenseObj.z / WAGES.z) / (expenseObj.boomer / WAGES.boomer))
+    let hours = (Math.ceil((40 * factor - 40) * 4) / 4).toFixed(2)
+    // console.log(hours)
+    // return hours
+    return new Intl.NumberFormat({ style: 'number', maximumFractionDigits: 2 }).format(hours)
+  }
+
+  function formatInHours(num) {
+    num = Math.abs(num)
+    if (num >= 1) return num + " hours"
+    else return 60 * num + " minutes"
+  }
+
+  function formatInDollars(num, dec = 2) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: dec }).format(num)
   }
 
 
@@ -90,11 +95,11 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
     < >
       <article className="history-dollar container container--with-border">
         <div className="history-dollar__text">
-          <p className="context">{dollarFormat(zWage, 2)} is <span className="light-color">{dollarFormat(zWageWayback, 2)}</span> in {boomerYear} dollars,
-            or {wagePercentChange.amountFormatted} {wagePercentChange.isNowHigher ? "more" : "less"} than {dollarFormat(boomerWage, 2)}</p>
+          <p className="context">{formatInDollars(WAGES.z, 2)} is <span className="light-color">{formatInDollars(WAGES.zWayback, 2)}</span> in {boomerYear} dollars,
+            or {PERCENT_CHANGE.wage.amountFormatted} {PERCENT_CHANGE.wage.isNowHigher ? "more" : "less"} than {formatInDollars(WAGES.boomer, 2)}</p>
         </div>
-        <div className="graphic-wrapper history-dollar__graphic">
-          <WaybackComparison boomerWage={boomerWage} zWageWayback={zWageWayback} />
+        <div className="graphic-wrapper history-dollar__graphic ">
+          <WaybackComparison boomerWage={WAGES.boomer} zWageWayback={WAGES.zWayback} />
         </div>
       </article>
 
@@ -111,19 +116,19 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
       <article className="upenn-chart container container--with-border">
         <p className="context">Cost of Tuition</p>
-        <p className="context context--smaller">(~<span className="light-color">{dollarFormat(zUniCost, 0)}</span> in {zYear})</p>
-        <UniPriceChart boomerYear={boomerYear} zYear={zYear} />
+        <p className="context context--smaller">(~<span className="light-color">{formatInDollars(UNI_COSTS.z, 0)}</span> in {zYear})</p>
+        <UniPriceChart className="chart" boomerYear={boomerYear} zYear={zYear} />
         <p className="legend">Historical price of tuition at UPENN for Arts &amp; Science programs</p>
       </article>
 
       <article className="uni-real-cost container container--with-border">
-        <div className="uni-real-cost__graphic">
+        <div className="uni-real-cost__graphic ">
           <img src={collegeDrop} alt="" />
         </div>
         <div className="uni-real-cost__text">
-          <p className="context">{dollarFormat(zUniCost, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{dollarFormat(zUniCostWayback, 0)}</span>. That's {uniPercentChange.amountFormatted} {uniPercentChange.isNowHigher ? "higher" : "lower"} than the actual tuition - {dollarFormat(boomerUniCost, 0)}.</p>
-          {uniPercentChange.amount >= 10 && uniPercentChange.isNowHigher ?
-            <p className="context">Imagine working 40 hours, then working another {calcExtraTimeForUni()} just to catch up.</p> : ""
+          <p className="context">{formatInDollars(UNI_COSTS.z, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{formatInDollars(UNI_COSTS.zWayback, 0)}</span>. That's {PERCENT_CHANGE.uni.amountFormatted} {PERCENT_CHANGE.uni.isNowHigher ? "higher" : "lower"} than the actual tuition of {formatInDollars(UNI_COSTS.boomer, 0)}.</p>
+          {PERCENT_CHANGE.uni.amount >= 10 && PERCENT_CHANGE.uni.isNowHigher ?
+            <p className="context">Imagine working 40 hours, then working another {formatInHours(extraTimeNeeded(UNI_COSTS))} just to catch up.</p> : ""
           }
         </div>
       </article>
@@ -143,25 +148,25 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
         </div>
         <div className="rent-chart__line-graph">
           <p className="context">Median Rent</p>
-          <p className="context context--smaller">(~<span className="light-color">{dollarFormat(lookupRent(zYear), 0)}</span> in {zYear})</p>
+          <p className="context context--smaller">(~<span className="light-color">{formatInDollars(RENT_COSTS.z, 0)}</span> in {zYear})</p>
           <RentLine boomerYear={boomerYear} zYear={zYear} />
           <p className="legend">Data between decades approximated</p>
         </div>
       </article>
       <article className="rent-real-cost container container--with-border">
         <div className="rent-real-cost__text">
-          <p className="context">{dollarFormat(zRentCost, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{dollarFormat(zRentCostWayback, 0)}</span>. That's {rentPercentChange.amountFormatted} {rentPercentChange.isNowHigher ? "higher" : "lower"} than the actual rent - {dollarFormat(boomerRentCost, 0)}.</p>
-          {rentPercentChange.amount >= 10 && rentPercentChange.isNowHigher ?
-            <p className="context">Imagine having to work another {calcExtraTimeForRent()} this week for the same place to live.</p> : ""
+          <p className="context">{formatInDollars(RENT_COSTS.z, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{formatInDollars(RENT_COSTS.zWayback, 0)}</span>. That's {PERCENT_CHANGE.rent.amountFormatted} {PERCENT_CHANGE.rent.isNowHigher ? "higher" : "lower"} than the actual rent of {formatInDollars(RENT_COSTS.boomer, 0)}.</p>
+          {PERCENT_CHANGE.rent.amount >= 10 && PERCENT_CHANGE.rent.isNowHigher ?
+            <p className="context">Imagine having to work another {formatInHours(extraTimeNeeded(RENT_COSTS))} this week for the same place to live.</p> : ""
           }
         </div>
       </article>
 
       <article className="summary container container--with-border">
         <div className="summary__text">
-          <p className="context">{wagePercentChange.amountFormatted} difference in income is only a part of the story. {calcExtraTimeForRent() + calcExtraTimeForUni()}</p>
+          <p className="context">{PERCENT_CHANGE.wage.amountFormatted} difference in income is only a part of the story. {(extraTimeNeeded(RENT_COSTS) + extraTimeNeeded(UNI_COSTS))}</p>
         </div>
-        <div className="summary_img">
+        <div className="summary_graphic">
           <img src={wheel} alt="" />
         </div>
       </article>
