@@ -74,10 +74,9 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
   function extraTimeNeeded(expenseObj) {
     let factor = ((expenseObj.z / WAGES.z) / (expenseObj.boomer / WAGES.boomer))
-    let hours = (Math.ceil((40 * factor - 40) * 4) / 4).toFixed(2)
-    // console.log(hours)
-    // return hours
-    return new Intl.NumberFormat({ style: 'number', maximumFractionDigits: 2 }).format(hours)
+    let hours = (Math.ceil((40 * factor - 40) * 4) / 4)
+    return Math.round(hours * 1e2) / 1e2;
+    // return new Intl.NumberFormat({ style: 'number', maximumFractionDigits: 2 }).format(hours)
   }
 
   function formatInHours(num) {
@@ -164,7 +163,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
       <article className="summary container container--with-border">
         <div className="summary__text">
-          <p className="context">{PERCENT_CHANGE.wage.amountFormatted} difference in income is only a part of the story. {(extraTimeNeeded(RENT_COSTS) + extraTimeNeeded(UNI_COSTS))}</p>
+          <p className="context">{PERCENT_CHANGE.wage.amountFormatted} difference in income is only a part of the story. {  (extraTimeNeeded(RENT_COSTS) + extraTimeNeeded(UNI_COSTS))}</p>
         </div>
         <div className="summary_graphic">
           <img src={wheel} alt="" />
