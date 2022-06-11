@@ -186,11 +186,18 @@ body {
         @include large() {
           font-size: 6em;
         }
+
+        &:hover,
+        &:focus {
+          background-color: #fff;
+          text-decoration: none;
+        }
       }
 
       &#boomerYear,
       &#zYear {
         padding-left: 0.3em;
+        width: 6.5ch;
       }
     }
 
@@ -224,6 +231,7 @@ body {
         width: 2.6em;
         height: 2.6em;
         display: flex;
+        letter-spacing: 0.04em;
         justify-content: center;
         align-items: center;
         border-radius: 100vh;
@@ -240,6 +248,7 @@ body {
 
   .calculations-wrapper {
     margin-bottom: 2em;
+    min-height: 75vh;
 
     article {
 
@@ -255,11 +264,16 @@ body {
           display: flex;
           justify-content: center;
           align-items: center;
+          flex-direction: column;
           text-align: right;
           padding: 3em 2.5em 3em 2em;
 
           @include large() {
             padding: 4em 3em;
+          }
+
+          p+p {
+            margin-top: 1em;
           }
         }
 

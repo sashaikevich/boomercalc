@@ -114,7 +114,8 @@ export function RentLine({ boomerYear, zYear }) {
       pointBackgroundColor: "#000",
       pointHoverBackgroundColor: "#fff",
       pointRadius: 4,
-      pointHoverRadius: 8
+      pointHoverRadius: 8,
+      pointHitRadius: 12
     }
     ]
   }
@@ -142,6 +143,6 @@ export function RentLine({ boomerYear, zYear }) {
   }
 
   return (
-    <Line data={chartData} options={chartOptions} width={100} height={30} />
+    <Line data={chartData} options={chartOptions} width={100} height={45} />
   )
 }
