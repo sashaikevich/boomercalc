@@ -12,7 +12,7 @@ function CalcInterface() {
     <>
       <Header />
       <Form />
-      <Footer />
+      {/* <Footer /> */}
     </>
   )
 }

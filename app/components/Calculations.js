@@ -1,6 +1,5 @@
 import React from "react";
-
-// todo $12.95 today is giving me 0.600000000001 minutes !
+import { BiUpArrow, BiDownArrow } from 'react-icons/bi'
 
 // data
 import DATA_CPI from "../data/cpi-us"
@@ -29,8 +28,9 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
   const WAGES = {
     boomer: boomerWage,
     z: zWage,
-    get zWayback() { return (this.z * CPIS.factor).toFixed(2) },
-    get boomerToday() { return (this.boomer / CPIS.factor).toFixed(2) },
+    // get zWayback() { return (this.z * CPIS.factor).toFixed(2) },
+    get zWayback() { return (this.z * CPIS.factor) },
+    get boomerToday() { return (this.boomer / CPIS.factor) },
   }
 
   const UNI_COSTS = {
@@ -60,14 +60,14 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
       let upperBracket = yearsArr[index]
 
       return lowerBracket.rent + (upperBracket.rent - lowerBracket.rent) / (upperBracket.year - lowerBracket.year) * (yr - lowerBracket.year)
-    }
+    },
   }
 
   const PERCENT_CHANGE = {
     PercentChange: function (wayback, historic) {
       this.amount = Math.round((Math.abs(1 - wayback / historic) * 100) * 1e2) / 1e2
       // this.amountFormatted = `${parseFloat(this.amount)}%`
-      this.amountFormatted = `${this.amount}%`
+      this.amountFormatted = `${this.amount.toLocaleString('en-US')}%`
       this.isNowHigher = wayback >= historic
     },
     get wage() { return new this.PercentChange(WAGES.zWayback, WAGES.boomer) },
@@ -75,17 +75,11 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
     get uni() { return new this.PercentChange(UNI_COSTS.zWayback, UNI_COSTS.boomer) }
   }
 
-  function extraTimeNeededPerWeek(expenseObj) {
-    // let factor = ((expenseObj.z / WAGES.z) / (expenseObj.boomer / WAGES.boomer))
-    // return 40 * factor - 40
-    function toNearrestQuarter(num) {
-      num
-    }
-    let factor = 1 / ((expenseObj.boomer / WAGES.boomer) / (expenseObj.z / WAGES.z))
-    toNearrestQuarter(40 * factor)
+  function formatIntoDollars(num, dec = 2) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: dec }).format(num)
   }
 
-  function formatIntoHrsMins(num, roundToNearestQuarter) {
+  function formatIntoHrsMins(num) {
     let str = ""
     let hrs = Math.floor(num)
     let mins = Math.round(num % 1 * 60)
@@ -103,7 +97,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
       if (hrs == 1) {
         str += `${hrs} hour `
       } else if (hrs > 1) {
-        str += `${hrs} hours `
+        str += `${hrs.toLocaleString('en-US')} hours `
       }
     }
 
@@ -118,39 +112,79 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
       str = "about a minute"
     }
 
-    return str
+    return { hrs, mins, str }
   }
 
-  function formatIntoDollars(num, dec = 2) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: dec }).format(num)
+  function timePerWorkWeek(expenseObj) {
+    let factor = 1 / ((expenseObj.boomer / WAGES.boomer) / (expenseObj.z / WAGES.z))
+
+    let { hrs, mins } = formatIntoHrsMins(40 * factor)
+    let str = "a "
+
+    if (hrs) str += `${hrs}-hour`
+
+    if (mins && hrs) {
+      str += `-and-${mins}-minute`
+    } else if (mins) {
+      str += `${mins}-minute`
+    }
+
+    str += " workweek, instead of a 40-hour workweek of "
+
+    // edge cases:
+    // if time is almost nothing
+    if (hrs == 0 && mins == 0) str = "only a couple minutes a week, instead of 40 hours in "
+    // if time equals the hours in a week
+    else if (hrs == 24 * 7) str = "every single hour of the week in "
+    // if time is a lot more than all the hours in a week
+    else if (hrs >= 24 * 7 * 1.5) str = "every single hour of the week and then some in "
+
+    str += ""
+    return str
+
+
   }
+
+  function timeDiff(expenseObj, convertToDays = false) {
+    let diff = expenseObj.z / WAGES.z - expenseObj.boomer / WAGES.boomer
+    let hasImproved = diff <= 0
+    let str = ""
+    diff = Math.abs(diff)
+    let days = Math.ceil(diff / 24)
+
+    if (hasImproved) str = formatIntoHrsMins(diff).str + " less"
+    else str = "an extra " + formatIntoHrsMins(diff).str
+
+    if (convertToDays) str += days >= 2 ? ` (that's ${days.toLocaleString('en-US')} days!)` : ''
+
+    return str;
+  }
+
+
 
   function WageContext() {
     return <>
-      <p className="context">{formatIntoDollars(WAGES.z, 2)} is {formatIntoDollars(WAGES.zWayback, 2)} in {boomerYear} dollars<br />
-        or <span className="light-color">{PERCENT_CHANGE.wage.amountFormatted} {PERCENT_CHANGE.wage.isNowHigher ? "more" : "less"}</span> than {formatIntoDollars(WAGES.boomer, 2)}</p>
-      <p className="context">To have the buying power of one work hour at {zYear}'s wage, you'd have to work {WAGES.boomer > WAGES.zWayback ? 'only' : ''} {formatIntoHrsMins(1 / (WAGES.boomer / WAGES.zWayback))} at {boomerYear}'s wage.</p>
+      <p className="context">{formatIntoDollars(WAGES.z, 2)} is <span className="light-color">{formatIntoDollars(WAGES.zWayback, 2)} in {boomerYear}</span> dollars,<br />
+        or {PERCENT_CHANGE.wage.amountFormatted} {PERCENT_CHANGE.wage.isNowHigher ? "more" : "less"} than {formatIntoDollars(WAGES.boomer, 2)}</p>
+      <p className="context">You'd have to work {WAGES.boomer > WAGES.zWayback ? 'only' : ''} {formatIntoHrsMins(1 / (WAGES.boomer / WAGES.zWayback)).str} at {boomerYear}'s wage to have the buying power of an hour worked at {zYear}'s wage.</p>
     </>
   }
 
-
-  function SchoolContext() {
-    let movement;
-
+  function UniContext() {
     return <>
-      <p className="context">{formatIntoDollars(UNI_COSTS.z, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{formatIntoDollars(UNI_COSTS.zWayback, 0)}</span>. That's {PERCENT_CHANGE.uni.amountFormatted} {PERCENT_CHANGE.uni.isNowHigher ? "higher" : "lower"} than {formatIntoDollars(UNI_COSTS.boomer, 0)} - the actual tuition that year.</p>
+      <p className="context">{formatIntoDollars(UNI_COSTS.z, 0)} adjusted to {boomerYear} is {formatIntoDollars(UNI_COSTS.zWayback, 0)}. That's {PERCENT_CHANGE.uni.amountFormatted} {PERCENT_CHANGE.uni.isNowHigher ? "higher" : "lower"} than {formatIntoDollars(UNI_COSTS.boomer, 0)} - the actual tuition that year.</p>
 
-      <p className="context">To attend the same program in {zYear}, you'd have to work a {extraTimeNeededPerWeek(UNI_COSTS)} week, instead of a 40 hour week in {boomerYear}.</p>
+      <p className="context">Having to pay {formatIntoDollars(Math.abs(UNI_COSTS.boomer - UNI_COSTS.zWayback), 0)} {PERCENT_CHANGE.uni.isNowHigher ? "more" : "less"}{PERCENT_CHANGE.wage.amount >= PERCENT_CHANGE.uni.amount ? ", but" : ""} with a wage that's {formatIntoDollars(Math.abs(WAGES.boomer - WAGES.zWayback), 2)}/hr {PERCENT_CHANGE.wage.isNowHigher ? "higher" : "lower"}, means that you'd need to work {timeDiff(UNI_COSTS, true)} to pay off your tuition.</p>
+
+      {/* <p className="context">Having to pay {formatIntoDollars(Math.abs(UNI_COSTS.boomer - UNI_COSTS.zWayback), 0)} {PERCENT_CHANGE.uni.isNowHigher ? "more" : "less"} with a wage that's {formatIntoDollars(Math.abs(WAGES.boomer - WAGES.zWayback), 2)}/hr {PERCENT_CHANGE.wage.isNowHigher ? "higher" : "lower"}, means that you'd be working {timePerWorkWeek(UNI_COSTS)} {boomerYear} to pay off the same proportion of your student debt.</p> */}
     </>
   }
 
   function RentContext() {
     return (<>
-      <p className="context">{formatIntoDollars(RENT_COSTS.z, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{formatIntoDollars(RENT_COSTS.zWayback, 0)}</span>. That's {PERCENT_CHANGE.rent.amountFormatted} {PERCENT_CHANGE.rent.isNowHigher ? "higher" : "lower"} than the actual rent of {formatIntoDollars(RENT_COSTS.boomer, 0)}.</p>
+      <p className="context">{formatIntoDollars(RENT_COSTS.z, 0)} adjusted to {boomerYear} is {formatIntoDollars(RENT_COSTS.zWayback, 0)}. That's {PERCENT_CHANGE.rent.amountFormatted} {PERCENT_CHANGE.rent.isNowHigher ? "higher" : "lower"} than {formatIntoDollars(RENT_COSTS.boomer, 0)} - the median rent for {boomerYear}.</p>
 
-      {/* {PERCENT_CHANGE.rent.amount >= 10 && PERCENT_CHANGE.rent.isNowHigher ?
-        <p className="context">Imagine having to work another {formatIntoHrsMins(extraTimeNeededPerWeek(RENT_COSTS), true)} this week for the same place to live.</p> : ""
-      } */}
+      <p className="context">Having to pay {formatIntoDollars(Math.abs(RENT_COSTS.boomer - RENT_COSTS.zWayback), 0)} {PERCENT_CHANGE.uni.isNowHigher ? "more" : "less"}{PERCENT_CHANGE.wage.amount >= PERCENT_CHANGE.uni.amount ? ", but" : ""} with a wage that's {formatIntoDollars(Math.abs(WAGES.boomer - WAGES.zWayback), 2)}/hr {PERCENT_CHANGE.wage.isNowHigher ? "higher" : "lower"}, means that you'd need to work {timeDiff(RENT_COSTS)} to cover your rent.</p>
     </>)
   }
 
@@ -189,7 +223,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
           <img src={collegeDrop} alt="" />
         </div>
         <div className="uni-real-cost__text">
-          <SchoolContext />
+          <UniContext />
         </div>
       </article>
 
@@ -221,7 +255,14 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
       <article className="summary container container--with-border">
         <div className="summary__text">
-          <h2 className="section-title">{PERCENT_CHANGE.wage.amountFormatted} difference in income is only a part of the story. {(extraTimeNeededPerWeek(RENT_COSTS) + extraTimeNeededPerWeek(UNI_COSTS))}</h2>
+          <h2 className="section-title">{boomerYear} -- {zYear}</h2>
+          <table>
+            <tbody>
+              <tr><td>Wages:</td><td>{PERCENT_CHANGE.wage.amountFormatted}</td><td>{PERCENT_CHANGE.wage.isNowHigher ? <BiUpArrow /> : <BiDownArrow />}</td></tr>
+              <tr><td>College:</td><td>{PERCENT_CHANGE.uni.amountFormatted}</td><td>{PERCENT_CHANGE.uni.isNowHigher ? <BiUpArrow /> : <BiDownArrow />}</td></tr>
+              <tr><td>Rent:</td><td>{PERCENT_CHANGE.rent.amountFormatted}</td><td>{PERCENT_CHANGE.rent.isNowHigher ? <BiUpArrow /> : <BiDownArrow />}</td></tr>
+            </tbody>
+          </table>
         </div>
         <div className="summary_graphic">
           <img src={wheel} alt="" />
