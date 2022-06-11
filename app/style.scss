@@ -237,7 +237,7 @@ body {
           justify-content: center;
           flex-direction: column;
           text-align: right;
-          padding: 3em 2.5em 3em 2em;
+          padding: 2em;
 
           @include large() {
             padding: 4em 3em;
@@ -285,7 +285,7 @@ body {
         .college-stats__text {
           align-items: center;
           text-align: center;
-          padding: 2em 1.5em;
+          padding: 2em;
 
           @include large() {
             display: flex;
@@ -306,14 +306,6 @@ body {
 
         p.context {
           margin: 0;
-
-          &--smaller {
-            margin-bottom: 1.25em;
-
-            @include large() {
-              margin-bottom: 0.5em;
-            }
-          }
         }
 
         p.legend {
@@ -425,14 +417,6 @@ body {
 
           p.context {
             margin: 0;
-
-            &--smaller {
-              margin-bottom: 1.25em;
-
-              @include large() {
-                margin-bottom: 0;
-              }
-            }
           }
 
           .legend {
@@ -474,12 +458,15 @@ body {
           font-family: sans-serif;
           padding: 2em 1em;
           border-right: 4px solid $light-color;
-
+          
           h2 {
+            text-align: center;
             margin-bottom: 0.2em;
           }
 
           table {
+            display: block;
+            margin: 0 auto;
             text-transform: uppercase;
 
             td {

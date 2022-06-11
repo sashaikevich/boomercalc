@@ -109,6 +109,7 @@ function Form() {
           name="boomerWage"
           onKeyUp={limitCharacters}
           onChange={(e) => handleChange(e, wageHandler)}
+          onBlur={wageHandler}
         />
 
         <p className="time-period">
@@ -120,6 +121,7 @@ function Form() {
             min={MIN_YEAR}
             max={MAX_YEAR}
             onChange={(e) => handleChange(e, yearHandler)}
+            onBlur={yearHandler}
           />
         </p>
       </div>
@@ -132,6 +134,7 @@ function Form() {
           name="zWage"
           onKeyUp={limitCharacters}
           onChange={(e) => handleChange(e, wageHandler)}
+          onBlur={wageHandler}
         />
         <p className="time-period">
           <span id="today">today</span>
@@ -142,8 +145,8 @@ function Form() {
             name="zYear"
             min={MIN_YEAR}
             max={MAX_YEAR}
-            onChange={(e) => handleChange(e, yearHandler)
-            }
+            onChange={(e) => handleChange(e, yearHandler)}
+            onBlur={yearHandler}
           />
           </span>
         </p>

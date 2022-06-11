@@ -1,5 +1,4 @@
 import React from "react";
-import { BiUpArrow, BiDownArrow } from 'react-icons/bi'
 
 // data
 import DATA_CPI from "../data/cpi-us"
@@ -7,6 +6,7 @@ import DATA_TUITION from "../data/upenn-tuition"
 import DATA_RENT from "../data/historic-rent"
 
 // images 
+import { BiUpArrow, BiDownArrow } from 'react-icons/bi'
 import college from "../imgs/college.svg"
 import collegeDrop from "../imgs/college-drop.svg"
 import keys from "../imgs/keys.svg"
@@ -164,8 +164,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
   function WageContext() {
     return <>
-      <p className="context">{formatIntoDollars(WAGES.z, 2)} is <span className="light-color">{formatIntoDollars(WAGES.zWayback, 2)} in {boomerYear}</span> dollars,<br />
-        or {PERCENT_CHANGE.wage.amountFormatted} {PERCENT_CHANGE.wage.isNowHigher ? "more" : "less"} than {formatIntoDollars(WAGES.boomer, 2)}</p>
+      <p className="context">{formatIntoDollars(WAGES.z, 2)} is <span className="light-color">{formatIntoDollars(WAGES.zWayback, 2)} in {boomerYear}</span> dollars, or {PERCENT_CHANGE.wage.amountFormatted} {PERCENT_CHANGE.wage.isNowHigher ? "more" : "less"} than {formatIntoDollars(WAGES.boomer, 2)}</p>
       <p className="context">You'd have to work {WAGES.boomer > WAGES.zWayback ? 'only' : ''} {formatIntoHrsMins(1 / (WAGES.boomer / WAGES.zWayback)).str} at {boomerYear}'s wage to have the buying power of an hour worked at {zYear}'s wage.</p>
     </>
   }
