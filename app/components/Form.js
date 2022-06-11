@@ -50,7 +50,11 @@ function Form() {
   }
 
   function wageHandler(e) {
-    let safeVal = parseFloat(e.target.value).toFixed(2)
+    let safeVal = parseFloat(e.target.value)
+    if (isNaN(safeVal)) {
+      safeVal = MIN_DOL
+    }
+    safeVal = safeVal.toFixed(2)
     safeVal = clampRange(safeVal, MIN_DOL, MAX_DOL)
 
     if (e.target.name == "boomerWage") {
@@ -107,6 +111,7 @@ function Form() {
           ref={boomerWageRef}
           id="boomerWage"
           name="boomerWage"
+          tabIndex="1"
           onKeyUp={limitCharacters}
           onChange={(e) => handleChange(e, wageHandler)}
           onBlur={wageHandler}
@@ -118,6 +123,7 @@ function Form() {
             ref={boomerYearRef}
             id="boomerYear"
             name="boomerYear"
+            tabIndex="2"
             min={MIN_YEAR}
             max={MAX_YEAR}
             onChange={(e) => handleChange(e, yearHandler)}
@@ -132,6 +138,7 @@ function Form() {
           ref={zWageRef}
           id="zWage"
           name="zWage"
+          tabIndex="3"
           onKeyUp={limitCharacters}
           onChange={(e) => handleChange(e, wageHandler)}
           onBlur={wageHandler}

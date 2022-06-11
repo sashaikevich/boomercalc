@@ -262,6 +262,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
               <tr><td>Rent:</td><td>{PERCENT_CHANGE.rent.amountFormatted}</td><td>{PERCENT_CHANGE.rent.isNowHigher ? <BiUpArrow /> : <BiDownArrow />}</td></tr>
             </tbody>
           </table>
+          {/* {formatIntoHrsMins(Math.abs((UNI_COSTS.z / WAGES.z - UNI_COSTS.boomer / WAGES.boomer) + (RENT_COSTS.z / WAGES.z - RENT_COSTS.boomer / WAGES.boomer))).str} */}
         </div>
         <div className="summary_graphic">
           <img src={wheel} alt="" />
