@@ -75,55 +75,50 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
     get uni() { return new this.PercentChange(UNI_COSTS.zWayback, UNI_COSTS.boomer) }
   }
 
-  function extraTimeNeeded(expenseObj) {
-    let factor = ((expenseObj.z / WAGES.z) / (expenseObj.boomer / WAGES.boomer))
-    return 40 * factor - 40
+  function extraTimeNeededPerWeek(expenseObj) {
+    // let factor = ((expenseObj.z / WAGES.z) / (expenseObj.boomer / WAGES.boomer))
+    // return 40 * factor - 40
+    function toNearrestQuarter(num) {
+      num
+    }
+    let factor = 1 / ((expenseObj.boomer / WAGES.boomer) / (expenseObj.z / WAGES.z))
+    toNearrestQuarter(40 * factor)
   }
 
-  function formatIntoHours(num, roundToNearestQuarter) {
-    num = Math.abs(num)
-    console.log(num)
-    if (num < 1) {
-      return Math.round(60 * num) + " minutes"
-    } else if (num == 1) {
-      return num + " hour"
-    } else {
-      if (roundToNearestQuarter) {
-        num = Math.ceil(num * 4) / 4
-        num = Math.round(num * 1e2) / 1e2
-        return num + " hours"
-      } else {
-        let hrs = Math.floor(num)
-        let mins = Math.ceil((num % 1) * 60)
-        let str = "";
+  function formatIntoHrsMins(num, roundToNearestQuarter) {
+    let str = ""
+    let hrs = Math.floor(num)
+    let mins = Math.round(num % 1 * 60)
 
-        if (mins < 58 && mins > 2) {
-          if (hrs == 1) {
-            str += `${hrs} hour`
-          } else {
-            str += `${hrs} hours`
-          }
-          
-          return hrs + " hours and " + mins + " minutes"
+    if (mins > 57) {
+      hrs++
+      mins = 0
+      str += "about "
+    } else if (mins > 0 && mins < 3) {
+      mins = 0
+      str += "about "
+    }
 
-        } else if (mins >= 58) {
-          hrs++
-          mins = 0;
-          str += "about "
-        } else if (mins <= 2) {
-          mins = 0;
-          str += "about "
-        }
-
-        if (hrs == 1) {
-          str += `${hrs} hour`
-        } else {
-          str += `${hrs} hours`
-        }
-
+    if (hrs) {
+      if (hrs == 1) {
+        str += `${hrs} hour `
+      } else if (hrs > 1) {
+        str += `${hrs} hours `
       }
     }
 
+    if (mins && hrs) {
+      str += `and ${mins} minutes `
+    } else if (mins) {
+      str += `${mins} minutes `
+    }
+    // edge cases:
+    // if time is almost nothing
+    else if (hrs == 0 && mins == 0) {
+      str = "about a minute"
+    }
+
+    return str
   }
 
   function formatIntoDollars(num, dec = 2) {
@@ -132,22 +127,20 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
   function WageContext() {
     return <>
-      <p className="context">{formatIntoDollars(WAGES.z, 2)} is {formatIntoDollars(WAGES.zWayback, 2)} in {boomerYear} dollars,
+      <p className="context">{formatIntoDollars(WAGES.z, 2)} is {formatIntoDollars(WAGES.zWayback, 2)} in {boomerYear} dollars<br />
         or <span className="light-color">{PERCENT_CHANGE.wage.amountFormatted} {PERCENT_CHANGE.wage.isNowHigher ? "more" : "less"}</span> than {formatIntoDollars(WAGES.boomer, 2)}</p>
-      <p className="context">Every hour worked in {boomerYear} has the buying power of {formatIntoHours(1 / (WAGES.zWayback / WAGES.boomer), false)} in {zYear}.</p>
+      <p className="context">To have the buying power of one work hour at {zYear}'s wage, you'd have to work {WAGES.boomer > WAGES.zWayback ? 'only' : ''} {formatIntoHrsMins(1 / (WAGES.boomer / WAGES.zWayback))} at {boomerYear}'s wage.</p>
     </>
   }
 
 
   function SchoolContext() {
     let movement;
-    if (PERCENT_CHANGE.uni.amount >= 20) movement = "significantly "
-    else if (PERCENT_CHANGE.uni.amount >= 10) movement = "a lot "
-    else if (PERCENT_CHANGE.uni.amount < 10) movement = "a little "
 
     return <>
-      <p className="context">{formatIntoDollars(UNI_COSTS.z, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{formatIntoDollars(UNI_COSTS.zWayback, 0)}</span>. That's {PERCENT_CHANGE.uni.amountFormatted} - {movement} {PERCENT_CHANGE.uni.isNowHigher ? "higher" : "lower"} than the tuition in {boomerYear} - {formatIntoDollars(UNI_COSTS.boomer, 0)}.</p>
-      {/* <p className="context">{string}</p> */}
+      <p className="context">{formatIntoDollars(UNI_COSTS.z, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{formatIntoDollars(UNI_COSTS.zWayback, 0)}</span>. That's {PERCENT_CHANGE.uni.amountFormatted} {PERCENT_CHANGE.uni.isNowHigher ? "higher" : "lower"} than {formatIntoDollars(UNI_COSTS.boomer, 0)} - the actual tuition that year.</p>
+
+      <p className="context">To attend the same program in {zYear}, you'd have to work a {extraTimeNeededPerWeek(UNI_COSTS)} week, instead of a 40 hour week in {boomerYear}.</p>
     </>
   }
 
@@ -156,7 +149,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
       <p className="context">{formatIntoDollars(RENT_COSTS.z, 0)} adjusted to {boomerYear} is <span className="xxlight-color xxlight-color--with-bg">{formatIntoDollars(RENT_COSTS.zWayback, 0)}</span>. That's {PERCENT_CHANGE.rent.amountFormatted} {PERCENT_CHANGE.rent.isNowHigher ? "higher" : "lower"} than the actual rent of {formatIntoDollars(RENT_COSTS.boomer, 0)}.</p>
 
       {/* {PERCENT_CHANGE.rent.amount >= 10 && PERCENT_CHANGE.rent.isNowHigher ?
-        <p className="context">Imagine having to work another {formatIntoHours(extraTimeNeeded(RENT_COSTS), true)} this week for the same place to live.</p> : ""
+        <p className="context">Imagine having to work another {formatIntoHrsMins(extraTimeNeededPerWeek(RENT_COSTS), true)} this week for the same place to live.</p> : ""
       } */}
     </>)
   }
@@ -179,14 +172,14 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
         </div>
         <div className="college-stats__text">
           <div className="question">
-            <p className="context">What if you want to attend college?</p>
+            <h2 className="section-title">What if you want to attend college?</h2>
           </div>
         </div>
       </article>
 
       <article className="upenn-chart container container--with-border">
-        <p className="context">Cost of Tuition</p>
-        <p className="context context--smaller">(~<span className="light-color">{formatIntoDollars(UNI_COSTS.z, 0)}</span> in {zYear})</p>
+        <h2 className="section-title">Cost of Tuition</h2>
+        <h3 className="subtitle">(~<span className="light-color">{formatIntoDollars(UNI_COSTS.z, 0)}</span> in {zYear})</h3>
         <UniPriceChart className="chart" boomerYear={boomerYear} zYear={zYear} />
         <p className="legend">Historical price of tuition at UPENN for Arts &amp; Science programs</p>
       </article>
@@ -202,7 +195,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
       <article className="place-to-live container container--with-border">
         <div className="place-to-live__text">
-          <p className="context">How about a place to live?</p>
+          <h2 className="section-title">How about a place to live?</h2>
         </div>
         <div className="place-to-live__graphic">
           <img src={keys} alt="" />
@@ -214,8 +207,8 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
           <img src={fish} alt="" />
         </div>
         <div className="rent-chart__line-graph">
-          <p className="context">Median Rent</p>
-          <p className="context context--smaller">(~<span className="light-color">{formatIntoDollars(RENT_COSTS.z, 0)}</span> in {zYear})</p>
+          <h2 className="section-title">Median Rent</h2>
+          <h3 className="subtitle">(~<span className="light-color">{formatIntoDollars(RENT_COSTS.z, 0)}</span> in {zYear})</h3>
           <RentLine boomerYear={boomerYear} zYear={zYear} />
           <p className="legend">Data between decades approximated</p>
         </div>
@@ -228,7 +221,7 @@ function Calculations({ boomerWage, boomerYear, zWage, zYear }) {
 
       <article className="summary container container--with-border">
         <div className="summary__text">
-          <p className="context">{PERCENT_CHANGE.wage.amountFormatted} difference in income is only a part of the story. {(extraTimeNeeded(RENT_COSTS) + extraTimeNeeded(UNI_COSTS))}</p>
+          <h2 className="section-title">{PERCENT_CHANGE.wage.amountFormatted} difference in income is only a part of the story. {(extraTimeNeededPerWeek(RENT_COSTS) + extraTimeNeededPerWeek(UNI_COSTS))}</h2>
         </div>
         <div className="summary_graphic">
           <img src={wheel} alt="" />
