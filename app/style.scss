@@ -69,6 +69,11 @@ body {
     }
   }
 
+  .highlighted {
+    background-image: linear-gradient(0deg, $light-color 40%, transparent 40%);
+  }
+
+
   .hidden {
     display: none;
   }
@@ -215,6 +220,13 @@ body {
         }
       }
     }
+  }
+
+  .loader {
+    font-size: 1.5em;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: sans-serif;
   }
 
   .calculations-wrapper {
@@ -552,6 +564,7 @@ body {
 
     a {
       color: inherit;
+
       &:hover {
         text-decoration: none;
       }
